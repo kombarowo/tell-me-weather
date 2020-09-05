@@ -1,23 +1,49 @@
 "use strict";
 
+const apikey = 'f6e1a268304df81602c77e0e849a6eba';
+
 //DOM Elements
 const selectCountries = document.querySelector('.country');
-const selectCyties = document.querySelector('.city');
+const selectCityes = document.querySelector('.city');
+const statusImg = document.querySelector('.status img');
 
 //Events
 selectCountries.addEventListener('input', () => selectCountry(selectCountries));
 selectCountry(selectCountries);
 
-function selectCountry(select) {
-	const selected = select.selectedIndex;
-	const country = select[selected].value;
+selectCityes.addEventListener('input', () => selectCity(selectCityes));
 
+//Functions
+function selectCountry(select) {
+	const selectId = select.selectedIndex;
+	const country = select[selectId].value;
+
+	setStatus(statusImg, 'request');
 	getRequest('city.list.json')
 		.then(resp => filterListByCountry(resp, country))
 		.then(list => {
-			selectCyties.classList.remove('hidden');
-			selectCyties.innerHTML = createCityList(list);
+			selectCityes.innerHTML = createCityList(list);
+			setStatus(statusImg, 'done');
+			selectCity(selectCityes);
 		})
+		.catch(e => {
+			console.log(e);
+		})
+}
+
+function setStatus(el, status) {
+	switch (status) {
+		case 'request': {
+			selectCityes.classList.add('hidden');
+			el.setAttribute('src', '../img/spin.gif');
+			break;
+		}
+		case 'done': {
+			selectCityes.classList.remove('hidden');
+			el.setAttribute('src', '');
+			break;
+		}
+	}
 }
 
 async function getRequest(url) {
@@ -45,7 +71,14 @@ function createCityList(list) {
 
 	let html = '';
 
-	list.forEach(city => {
+	let sortlist = list.sort(sortCity);
+
+	sortlist.forEach(city => {
+
+		if (city.name === '-') {
+			return;
+		}
+
 		const cityHtml = `
 		<option value=${city.id}>${city.name}</option>
 		`
@@ -55,5 +88,24 @@ function createCityList(list) {
 
 	return html;
 
+	function sortCity(a, b) {
+		if (a.name > b.name) {
+			return 1;
+		}
+		if (a.name < b.name) {
+			return -1;
+		}
+		return 0;
+	}
+
 }
+
+function selectCity(select) {
+	const selectId = select.selectedIndex;
+	const cityId = select[selectId].value;
+
+	// getRequest(`https://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apikey}`).then(res => console.log(res));
+}
+
+
 

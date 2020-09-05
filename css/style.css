@@ -18,17 +18,33 @@ select{
 	padding: 5px 20px;
 	text-align: center;
 	width: 250px;
+	opacity: 1;
+	transform: translate(0, 0%);
+	transition: opacity,transform 0.5s;
 }
 
 option{
 	width: 250px;
 }
 
-.country{
-	margin-bottom: 30px;
+.hidden{
+	opacity: 0;
+	transform: translate(0,50%);
 }
 
+.status{
+	width: 100px;
+	height: 100px;
+	margin: 20px auto;
+	display: flex;
+	justify-content:center;
+	align-items: center;
+}
+.status img{
+	height: 100%;
+	object-fit: none;
+}
 
-.hidden{
-	display: none;
+.weather{
+	padding-top: 25px;
 }
