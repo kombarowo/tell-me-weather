@@ -1,6 +1,8 @@
 "use strict";
 
-const apikey = 'f6e1a268304df81602c77e0e849a6eba';
+const apikey = 'f6e1a268304df81602c77e0e849a6eba',
+	storage = localStorage,
+	savedCity = JSON.parse(storage.getItem('savedCity'));
 
 //DOM Elements
 const selectCountries = document.querySelector('.country');
@@ -10,14 +12,31 @@ const weatherInfo = document.querySelector('.weather__info');
 
 //Events
 selectCountries.addEventListener('input', () => selectCountry(selectCountries));
-selectCountry(selectCountries);
+
+if (Object.keys(savedCity).length > 0) {
+	setSavedCity(savedCity);
+} else {
+	selectCountry(selectCountries);
+}
 
 selectCityes.addEventListener('input', () => selectCity(selectCityes));
 
-//Functions
-function selectCountry(select) {
-	const selectId = select.selectedIndex;
-	const country = select[selectId].value;
+// Functions
+async function setSavedCity(saved) {
+	selectCountry(selectCountries, saved);
+}
+
+function selectCountry(select, saved = '') {
+	let selectId = select.selectedIndex;
+	let country = select[selectId].value;
+
+	if (saved) {
+		select.selectedIndex = saved.countryId;
+		country = saved.country;
+	} else {
+		savedCity.country = country;
+		savedCity.countryId = selectId;
+	}
 
 	setStatus(statusImg, 'request');
 	getRequest(`/json/city.${country.toLowerCase()}.list.json`)
@@ -26,7 +45,7 @@ function selectCountry(select) {
 			setTimeout(() => {
 				selectCityes.innerHTML = createCityList(list);
 				setStatus(statusImg, 'done');
-				selectCity(selectCityes);
+				selectCity(selectCityes, saved);
 			}, 500);
 		})
 		.catch(e => {
@@ -113,9 +132,18 @@ function createCityList(list) {
 
 }
 
-function selectCity(select) {
-	const selectId = select.selectedIndex;
-	const cityId = select[selectId].value;
+function selectCity(select, saved = '') {
+	let selectId = select.selectedIndex;
+	let cityId = select[selectId].value;
+
+	if (saved) {
+		select.selectedIndex = saved.cityNum;
+		cityId = select[selectId].value;
+	} else {
+		savedCity.cityNum = selectId;
+		savedCity.cityId = cityId;
+		storage.setItem('savedCity', JSON.stringify(savedCity));
+	}
 
 	getRequest(`https://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apikey}`)
 		.then(res => createWeatherInfo(res))
