@@ -37,11 +37,13 @@ function selectCountry(select) {
 function setStatus(el, status) {
 	switch (status) {
 		case 'request': {
+			selectCountries.setAttribute('disabled', '');
 			selectCityes.classList.add('hidden');
 			el.setAttribute('src', '../img/spin.gif');
 			break;
 		}
 		case 'done': {
+			selectCountries.removeAttribute('disabled');
 			selectCityes.classList.remove('hidden');
 			el.setAttribute('src', '');
 			break;
