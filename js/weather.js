@@ -20,7 +20,7 @@ function selectCountry(select) {
 	const country = select[selectId].value;
 
 	setStatus(statusImg, 'request');
-	getRequest('city.list.min.json')
+	getRequest(`/json/city.${country.toLowerCase()}.list.json`)
 		.then(resp => filterListByCountry(resp, country))
 		.then(list => {
 			selectCityes.innerHTML = createCityList(list);
