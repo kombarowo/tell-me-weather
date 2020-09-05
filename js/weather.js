@@ -6,6 +6,7 @@ const apikey = 'f6e1a268304df81602c77e0e849a6eba';
 const selectCountries = document.querySelector('.country');
 const selectCityes = document.querySelector('.city');
 const statusImg = document.querySelector('.status img');
+const weatherInfo = document.querySelector('.weather__info');
 
 //Events
 selectCountries.addEventListener('input', () => selectCountry(selectCountries));
@@ -104,7 +105,43 @@ function selectCity(select) {
 	const selectId = select.selectedIndex;
 	const cityId = select[selectId].value;
 
-	// getRequest(`https://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apikey}`).then(res => console.log(res));
+	getRequest(`https://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apikey}`)
+		.then(res => createWeatherInfo(res))
+}
+
+function createWeatherInfo(obj) {
+	let {
+		name,
+		main: { temp },
+		wind: { speed },
+		weather: [{ main, icon }],
+		sys: { sunrise, sunset }
+	} = obj;
+
+	temp = convertTemp(temp);
+	speed = `${speed} м/с`;
+	icon = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+	sunrise = new Date(sunrise).toLocaleTimeString();
+	sunset = new Date(sunset).toLocaleTimeString();
+
+	let html = `
+		<h1 class="weather__title">${name}</h1>
+		<div class="weather__image">
+			<img src="${icon}" alt="weather-image">
+		</div>
+		<div class="weather__row">
+			<div class="desc">${main}</div>
+			<div class="temp">${temp} &#8451;</div>
+			<div class="wind">Ветер: ${speed}</div>
+			<div class="sunrise">Восход: ${sunrise}</div>
+			<div class="sunset">Закат: ${sunset}</div>
+		</div>
+	`
+	weatherInfo.innerHTML = html;
+}
+
+function convertTemp(t) {
+	return Math.floor(t - 273.15);
 }
 
 
