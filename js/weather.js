@@ -121,8 +121,8 @@ function createWeatherInfo(obj) {
 	temp = convertTemp(temp);
 	speed = `${speed} м/с`;
 	icon = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-	sunrise = new Date(sunrise).toLocaleTimeString();
-	sunset = new Date(sunset).toLocaleTimeString();
+	sunrise = new Date(convertTimeStamp(sunrise)).toLocaleTimeString();
+	sunset = new Date(convertTimeStamp(sunset)).toLocaleTimeString();
 
 	let html = `
 		<h1 class="weather__title">${name}</h1>
@@ -133,7 +133,7 @@ function createWeatherInfo(obj) {
 			<div class="desc">${main}</div>
 			<div class="temp">${temp} &#8451;</div>
 			<div class="wind">Ветер: ${speed}</div>
-			<div class="sunrise">Восход: ${sunrise}</div>
+			<div class="sunrise">Рассвет: ${sunrise}</div>
 			<div class="sunset">Закат: ${sunset}</div>
 		</div>
 	`
@@ -142,6 +142,10 @@ function createWeatherInfo(obj) {
 
 function convertTemp(t) {
 	return Math.floor(t - 273.15);
+}
+
+function convertTimeStamp(ts) {
+	return ts * 1000;
 }
 
 
