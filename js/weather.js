@@ -23,12 +23,14 @@ function selectCountry(select) {
 	getRequest(`/json/city.${country.toLowerCase()}.list.json`)
 		.then(resp => filterListByCountry(resp, country))
 		.then(list => {
-			selectCityes.innerHTML = createCityList(list);
-			setStatus(statusImg, 'done');
-			selectCity(selectCityes);
+			setTimeout(() => {
+				selectCityes.innerHTML = createCityList(list);
+				setStatus(statusImg, 'done');
+				selectCity(selectCityes);
+			}, 500);
 		})
 		.catch(e => {
-			console.log(e);
+			return;
 		})
 }
 
@@ -44,6 +46,14 @@ function setStatus(el, status) {
 			el.setAttribute('src', '');
 			break;
 		}
+		case 'error': {
+			const errorMessage = document.createElement('div')
+			errorMessage.classList.add('error');
+			errorMessage.textContent = 'Something went wrong, try again later...';
+			el.parentNode.insertAdjacentElement('beforebegin', errorMessage)
+			el.setAttribute('src', '../img/error.webp');
+			break;
+		}
 	}
 }
 
@@ -52,7 +62,7 @@ async function getRequest(url) {
 	const req = await fetch(url);
 
 	if (!req.ok) {
-		console.log('error!');
+		setStatus(statusImg, 'error');
 		return;
 	}
 

@@ -15,6 +15,7 @@ body {
 	max-width: 600px;
 	margin: 0px auto;
 	min-height: 100vh;
+	overflow: hidden;
 }
 
 .title {
@@ -41,12 +42,19 @@ body {
 	height: 100px;
 	margin: 25px auto 0px auto;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
 
 .status img {
 	height: 100%;
+}
+
+.error{
+	color: red;
+	font-size: 20px;
+	padding-top: 25px;
 }
 
 .weather__select {
@@ -73,7 +81,7 @@ option {
 
 .hidden {
 	opacity: 0;
-	transform: translate(0, 50%);
+	transform: translate(50%, 0%);
 }
 
 .weather__image{
