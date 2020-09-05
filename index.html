@@ -10,22 +10,30 @@
 
 <body>
 
-	<div class="wrapper">
+	<div class="weather">
 		<h1 class="title">Tell me weather</h1>
-		<select class="country" name="country">
-			<option value="RU" selected>Russia</option>
-			<option value="UA">Ukraine</option>
-			<option value="BY">Belarus</option>
-		</select>
+		<div class="weather__select">
+			<select class="country" name="country">
+				<option value="RU" selected>Russia</option>
+				<option value="UA">Ukraine</option>
+				<option value="BY">Belarus</option>
+			</select>
+			<select class="city hidden" name="city"></select>
+		</div>
 		<div class="status">
 			<img src="" alt="">
 		</div>
-		<select class="city hidden" name="city"></select>
 
-		<div class="weather">
-			<h1 class="city-name">Moscow</h1>
+		<div class="weather__info">
+			<h1 class="weather__title">Moscow</h1>
+			<div class="weather__image">
+				<img src="https://openweathermap.org/img/wn/02n@2x.png" alt="weather-image">
+			</div>
 			<div class="weather__row">
-				
+				<div class="temp">35 &#8451;</div>
+				<div class="wind">Ветер: 1.5 м/с</div>
+				<div class="sunrise">Восход: 2020-23-32 15:00</div>
+				<div class="sunset">Закат: 2020-23-32 15:00</div>
 			</div>
 		</div>
 	</div>

@@ -1,18 +1,56 @@
-body{
+@import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
+
+body {
 	margin: 0;
 	padding: 0;
 	text-align: center;
+	font-family: 'Acme', sans-serif;
+	width: 100%;
+	height: 100%;
 }
 
-.title{
+.weather {
+	background: #fefcf9;
+	color: #011d44;
+	max-width: 600px;
+	margin: 0px auto;
+	height: 100vh;
+}
+
+.title {
+	margin: 0;
+	padding: 50px 0px 50px 0px;
 	font-size: 40px;
-	font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 	letter-spacing: 5px;
 }
 
-select{
+.weather__title {
+	margin: 0;
+	padding: 50px 0px 0px 0px;
+	font-size: 40px;
+	letter-spacing: 5px;
+}
+
+.status {
+	width: 100px;
+	height: 100px;
+	margin: 25px auto 0px auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.status img {
+	height: 100%;
+}
+
+.weather__select {
+	display: flex;
+	justify-content: space-around;
+}
+
+select {
 	display: block;
-	margin: 0px auto;
 	border: 1px solid #000;
 	font-size: 20px;
 	padding: 5px 20px;
@@ -20,31 +58,47 @@ select{
 	width: 250px;
 	opacity: 1;
 	transform: translate(0, 0%);
-	transition: opacity,transform 0.5s;
+	transition: opacity, transform 0.5s;
+	font-family: 'Acme', sans-serif;
 }
 
-option{
+option {
 	width: 250px;
 }
 
-.hidden{
+.hidden {
 	opacity: 0;
-	transform: translate(0,50%);
+	transform: translate(0, 50%);
 }
 
-.status{
-	width: 100px;
-	height: 100px;
-	margin: 20px auto;
+.weather__image{
 	display: flex;
-	justify-content:center;
-	align-items: center;
+	justify-content: center;
 }
-.status img{
-	height: 100%;
-	object-fit: none;
+.weather__image img {
+	display: block;
 }
 
-.weather{
-	padding-top: 25px;
+.weather__row {
+	width: 75%;
+	margin: 0px auto;
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+.temp, .wind{
+	text-align: center;
+	font-size: 35px;
+	flex: 0 0 50%;
+	margin-bottom: 25px;
+}
+
+.sunrise, .sunset{
+	flex: 0 0 100%;
+	font-size: 25px;
+}
+
+.sunrise{
+	margin-bottom: 10px;
 }
