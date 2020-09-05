@@ -17,11 +17,17 @@ select{
 	font-size: 20px;
 	padding: 5px 20px;
 	text-align: center;
+	width: 250px;
+}
+
+option{
+	width: 250px;
 }
 
 .country{
 	margin-bottom: 30px;
 }
+
 
 .hidden{
 	display: none;
