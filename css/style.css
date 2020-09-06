@@ -97,7 +97,7 @@ option {
 	width: 75%;
 	margin: 0px auto;
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-start;
 	flex-wrap: wrap;
 }
 
@@ -105,8 +105,10 @@ option {
 .desc {
 	text-align: center;
 	font-size: 35px;
-	flex: 0 0 50%;
 	margin-bottom: 25px;
+}
+.desc{
+	margin-right: 10%;
 }
 
 .sunrise,
@@ -115,6 +117,7 @@ option {
 	flex: 0 0 100%;
 	font-size: 25px;
 	margin-bottom: 10px;
+	text-align: left;
 }
 
 @media (max-width:600px) {
