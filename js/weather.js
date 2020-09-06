@@ -173,9 +173,9 @@ function createWeatherInfo(obj) {
 		<div class="weather__row">
 			<div class="desc">${main}</div>
 			<div class="temp">${temp} &#8451;</div>
-			<div class="wind">Ветер: ${speed}</div>
-			<div class="sunrise">Рассвет: ${sunrise}</div>
-			<div class="sunset">Закат: ${sunset}</div>
+			<div class="wind">Wind speed: ${speed}</div>
+			<div class="sunrise">Sunrise: ${sunrise}</div>
+			<div class="sunset">Sunset: ${sunset}</div>
 		</div>
 	`
 	weatherInfo.innerHTML = html;
