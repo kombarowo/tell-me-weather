@@ -58,12 +58,14 @@ function setStatus(el, status) {
 		case 'request': {
 			selectCountries.setAttribute('disabled', '');
 			selectCityes.classList.add('hidden');
+			weatherInfo.classList.add('hidden');
 			el.setAttribute('src', '../img/spin.gif');
 			break;
 		}
 		case 'done': {
 			selectCountries.removeAttribute('disabled');
 			selectCityes.classList.remove('hidden');
+			weatherInfo.classList.remove('hidden');
 			el.setAttribute('src', '');
 			break;
 		}
@@ -146,8 +148,14 @@ function selectCity(select, saved = '') {
 		storage.setItem('savedCity', JSON.stringify(savedCity));
 	}
 
+	setStatus(statusImg, 'request');
 	getRequest(`https://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apikey}`)
-		.then(res => createWeatherInfo(res))
+		.then(res => {
+			setTimeout(() => {
+				setStatus(statusImg, 'done');
+				return weatherInfo.innerHTML = createWeatherInfo(res);
+			}, 500);
+		})
 }
 
 function createWeatherInfo(obj) {
@@ -160,7 +168,7 @@ function createWeatherInfo(obj) {
 	} = obj;
 
 	temp = convertTemp(temp);
-	speed = `${speed} м/с`;
+	speed = `${speed} m/s`;
 	icon = `https://openweathermap.org/img/wn/${icon}@2x.png`;
 	sunrise = new Date(convertTimeStamp(sunrise)).toLocaleTimeString();
 	sunset = new Date(convertTimeStamp(sunset)).toLocaleTimeString();
@@ -178,7 +186,7 @@ function createWeatherInfo(obj) {
 			<div class="sunset">Sunset: ${sunset}</div>
 		</div>
 	`
-	weatherInfo.innerHTML = html;
+	return html;
 }
 
 function convertTemp(t) {
