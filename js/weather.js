@@ -2,7 +2,7 @@
 
 const apikey = 'f6e1a268304df81602c77e0e849a6eba',
 	storage = localStorage,
-	savedCity = JSON.parse(storage.getItem('savedCity'));
+	savedCity = (localStorage.getItem('savedCity')) ? JSON.parse(storage.getItem('savedCity')) : {};
 
 //DOM Elements
 const selectCountries = document.querySelector('.country');
