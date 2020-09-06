@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
+
+body {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	font-family: 'Acme', sans-serif;
+	width: 100%;
+	height: 100%;
+}
+
+.weather {
+	background: #fefcf9;
+	color: #011d44;
+	max-width: 600px;
+	margin: 0px auto;
+	min-height: 100vh;
+	overflow: hidden;
+}
+
+.title {
+	margin: 0;
+	padding: 50px 0px 25px 0px;
+	font-size: 40px;
+	letter-spacing: 5px;
+}
+
+.weather__title {
+	margin: 0;
+	padding: 25px 0px 0px 0px;
+	font-size: 40px;
+	letter-spacing: 5px;
+}
+
+.weather__subtitle {
+	padding: 0;
+	font-size: 35px;
+}
+
+.status {
+	width: 100px;
+	height: 100px;
+	margin: 25px auto 0px auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.status img {
+	height: 100%;
+}
+
+.error {
+	color: red;
+	font-size: 20px;
+	padding-top: 25px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.weather__select {
+	display: flex;
+	justify-content: space-around;
+}
+
+select {
+	display: block;
+	border: 1px solid #000;
+	font-size: 20px;
+	padding: 5px 20px;
+	text-align: center;
+	width: 250px;
+	opacity: 1;
+	transition: opacity 0.5s;
+	font-family: 'Acme', sans-serif;
+}
+
+option {
+	width: 250px;
+}
+
+.hidden {
+	opacity: 0;
+}
+
+.weather__image {
+	display: flex;
+	justify-content: center;
+}
+
+.weather__image img {
+	display: block;
+}
+
+.weather__row {
+	width: 75%;
+	margin: 0px auto;
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+}
+
+.temp,
+.desc {
+	text-align: center;
+	font-size: 35px;
+	margin-bottom: 25px;
+}
+.desc{
+	margin-right: 10%;
+}
+
+.sunrise,
+.sunset,
+.wind {
+	flex: 0 0 100%;
+	font-size: 25px;
+	margin-bottom: 10px;
+	text-align: left;
+}
+
+@media (max-width:600px) {
+	.title {
+		font-size: 30px;
+		padding: 25px 0px 25px 0px;
+	}
+
+	.weather__select {
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		height: 100px;
+	}
+
+	.status {
+		width: 50px;
+		height: 50px;
+		margin: 10px auto 10px auto;
+	}
+
+	.weather__title {
+		font-size: 30px;
+	}
+
+	.weather__image {
+		height: 75px;
+	}
+
+	.weather__image img {
+		object-fit: contain;
+	}
+
+	.temp,
+	.desc {
+		font-size: 25px;
+		margin-bottom: 15px;
+	}
+
+	.sunrise,
+	.sunset,
+	.wind {
+		font-size: 20px;
+	}
+}
