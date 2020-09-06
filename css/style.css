@@ -32,7 +32,7 @@ body {
 	letter-spacing: 5px;
 }
 
-.weather__subtitle{
+.weather__subtitle {
 	padding: 0;
 	font-size: 35px;
 }
@@ -51,7 +51,7 @@ body {
 	height: 100%;
 }
 
-.error{
+.error {
 	color: red;
 	font-size: 20px;
 	padding-top: 25px;
@@ -84,10 +84,11 @@ option {
 	transform: translate(50%, 0%);
 }
 
-.weather__image{
+.weather__image {
 	display: flex;
 	justify-content: center;
 }
+
 .weather__image img {
 	display: block;
 }
@@ -100,15 +101,62 @@ option {
 	flex-wrap: wrap;
 }
 
-.temp, .desc{
+.temp,
+.desc {
 	text-align: center;
 	font-size: 35px;
 	flex: 0 0 50%;
 	margin-bottom: 25px;
 }
 
-.sunrise, .sunset, .wind{
+.sunrise,
+.sunset,
+.wind {
 	flex: 0 0 100%;
 	font-size: 25px;
 	margin-bottom: 10px;
+}
+
+@media (max-width:600px) {
+	.title {
+		font-size: 30px;
+		padding: 25px 0px 25px 0px;
+	}
+
+	.weather__select {
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		height: 100px;
+	}
+
+	.status {
+		width: 50px;
+		height: 50px;
+		margin: 10px auto 10px auto;
+	}
+
+	.weather__title {
+		font-size: 30px;
+	}
+
+	.weather__image {
+		height: 75px;
+	}
+
+	.weather__image img {
+		object-fit: contain;
+	}
+
+	.temp,
+	.desc {
+		font-size: 25px;
+		margin-bottom: 15px;
+	}
+
+	.sunrise,
+	.sunset,
+	.wind {
+		font-size: 20px;
+	}
 }

@@ -138,6 +138,7 @@ function selectCity(select, saved = '') {
 
 	if (saved) {
 		select.selectedIndex = saved.cityNum;
+		selectId = select.selectedIndex;
 		cityId = select[selectId].value;
 	} else {
 		savedCity.cityNum = selectId;
