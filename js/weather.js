@@ -39,7 +39,7 @@ function selectCountry(select, saved = '') {
 	}
 
 	setStatus(statusImg, 'request');
-	getRequest(`/json/city.${country.toLowerCase()}.list.json`)
+	getRequest(`./json/city.${country.toLowerCase()}.list.json`)
 		.then(resp => filterListByCountry(resp, country))
 		.then(list => {
 			setTimeout(() => {
@@ -59,7 +59,7 @@ function setStatus(el, status) {
 			selectCountries.setAttribute('disabled', '');
 			selectCityes.classList.add('hidden');
 			weatherInfo.classList.add('hidden');
-			el.setAttribute('src', '../img/spin.gif');
+			el.setAttribute('src', './img/spin.gif');
 			break;
 		}
 		case 'done': {
@@ -74,7 +74,7 @@ function setStatus(el, status) {
 			errorMessage.classList.add('error');
 			errorMessage.textContent = 'Something went wrong, try again later...';
 			el.parentNode.insertAdjacentElement('beforebegin', errorMessage)
-			el.setAttribute('src', '../img/error.webp');
+			el.setAttribute('src', './img/error.webp');
 			break;
 		}
 	}
