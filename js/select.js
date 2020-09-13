@@ -8,15 +8,13 @@ class Select {
     this.#render()
     this.#setup()
 
-    this.state = {
-      selectedId: options.selectedId
-    }
+    this.selectedId = options.selectedId
   }
 
   #render() {
-    const { data, selectedId } = this.options
+    const { data, selectedId, search } = this.options
 
-    this.$el.innerHTML = getTemplate(data, selectedId)
+    this.$el.innerHTML = getTemplate(data, selectedId, search)
   }
 
   #setup() {
@@ -25,9 +23,9 @@ class Select {
     this.closeByOverlay = this.closeByOverlay.bind(this)
     this.$list = this.$el.querySelector(this.options.list)
     this.$input = this.$el.querySelector(this.options.input)
+
     this.$el.addEventListener('click', this.onClick)
     this.$input.addEventListener('input', this.onInput)
-
     window.addEventListener('click', this.closeByOverlay)
   }
 
@@ -42,21 +40,21 @@ class Select {
 
     switch (type) {
       case 'input': {
-        if(this.options.selectedId){
-          this.selectItem(this.options.data[this.state.selectedId].id)
+        if (this.options.selectedId) {
+          this.selectItem(this.options.data[this.selectedId].id)
         }
         this.open()
         break
       }
       case 'item': {
-        this.selectItem(+e.target.dataset.id)
+        this.selectItem(e.target.dataset.id)
       }
     }
   }
 
   selectItem(id) {
     const items = this.$list.querySelectorAll('li')
-    items[this.state.selectedId].classList.remove('selected')
+    items[this.selectedId].classList.remove('selected')
 
     const selectIndex = Array.from(items).findIndex(item => item.dataset.id == id)
 
@@ -70,13 +68,20 @@ class Select {
 
     Array.from(items)[selectIndex].classList.add('selected')
 
-    this.$input.value = Array.from(items)[selectIndex].textContent
+    switch (this.$input.tagName) {
+      case 'DIV': {
+        this.$input.textContent = Array.from(items)[selectIndex].textContent;
+        break;
+      }
+      case 'INPUT': {
+        this.$input.value = Array.from(items)[selectIndex].textContent;
+        break;
+      }
+    }
 
-    this.state.selectedId = selectIndex
+    this.selectedId = selectIndex
 
     this.close()
-
-    console.log(this.options.data[selectIndex])
   }
 
   onInput(e) {
@@ -113,16 +118,34 @@ class Select {
       return false
     }
   }
+
+  destroy() {
+    this.$el.removeEventListener('click', this.onClick)
+    this.$input.removeEventListener('input', this.onInput)
+    window.removeEventListener('click', this.closeByOverlay)
+    this.$el.remove()
+  }
 }
 
-function getTemplate(data, selectedId) {
+function getTemplate(data, selectedId = '', search) {
   const list = data.map((item, idx) => {
     return `
       <li class="select-item ${isSelected(idx, selectedId)}" data-id="${item.id}" data-type="item">${item.name}</li>
     `
   })
 
-  return `<input class="select-input" value="${data[selectedId].name}" placeholder="Выберите..." type="text" data-type="input"><ul class="select-list">${list.join('')}</ul>`
+  let value;
+  if (selectedId) {
+    value = data[selectedId].name;
+  } else {
+    value = 'Choose...'
+  }
+
+  if (search) {
+    return `<input class="select-input" value="${value}" placeholder="Choose..." type="text" data-type="input"><ul class="select-list">${list.join('')}</ul>`
+  } else {
+    return `<div class="select-input" data-type="input">${value}</div><ul class="select-list">${list.join('')}</ul>`
+  }
 }
 
 function isSelected(id, selectedId) {
@@ -131,49 +154,6 @@ function isSelected(id, selectedId) {
   } else {
     return ''
   }
-}
-
-// const mySelect = new Select('select', {
-//   list: '.select-list',
-//   input: '.select-input',
-//   selectedId: 0,
-//   data: [
-//     { id: 0, value: 'Russia' },
-//     { id: 1, value: 'Ukraine' },
-//     { id: 2, value: 'Belarus' },
-//   ]
-// })
-
-let cityBySelect
-
-fetch('./city.by.list.json')
-  .then(resp => resp.json())
-  .then(json => {
-    json = json.sort(sortByNames)
-    cityBySelect = new Select('selectBy',{
-      list: '.select-list',
-      input: '.select-input',
-      selectedId: 120,
-      data: clearCityes(json)
-    })
-
-    clearCityes(json)
-  })
-
-function sortByNames(a,b){
-  if(a.name > b.name) {
-    return 1
-  } else if(a.name < b.name) {
-    return -1
-  } else {
-    return 0
-  }
-}
-
-function clearCityes(arr) {
-  const newArr = arr.filter(city => city.name != '-' && !city.name.match(/[а-я]/))
-
-  return newArr
 }
 
 
