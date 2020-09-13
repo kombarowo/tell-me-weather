@@ -1,35 +1,24 @@
 'use strict';
 
-const apikey = 'f6e1a268304df81602c77e0e849a6eba',
+const
+  apikey = 'f6e1a268304df81602c77e0e849a6eba',
   storage = localStorage,
   savedCity = (localStorage.getItem('savedCity')) ? JSON.parse(storage.getItem('savedCity')) : {};
 
-function getSavedCityProp(saved) {
-  if (Object.keys(saved).length <= 2) {
-    return {
-      cityId: 0,
-      cityNum: 0,
-      country: 0,
-      countryId: 0,
-    };
-  } else {
-    return saved;
-  }
-}
-
 //DOM Elements
-let countrySelect;
-let citySelect;
-const wrapper = document.querySelector('.weather__select');
-const statusImg = document.querySelector('.status img');
-const weatherInfo = document.querySelector('.weather__info');
+let countrySelect, citySelect;
+
+const
+  wrapper = document.querySelector('.weather__select'),
+  statusImg = document.querySelector('.status img'),
+  weatherInfo = document.querySelector('.weather__info');
 
 const renderCountries = new Promise((resolve, reject) => {
   countrySelect = new Select('country', {
     list: '.select-list',
     input: '.select-input',
     search: false,
-    selectedId: getSavedCityProp(savedCity).countryId,
+    selectedId: getSavedCityProps(savedCity).countryId,
     data: [
       { id: 'ru', name: 'Russia' },
       { id: 'ua', name: 'Ukraine' },
@@ -40,13 +29,14 @@ const renderCountries = new Promise((resolve, reject) => {
   resolve()
 })
 
+const countryIsReady = new Event('countryIsReady')
 renderCountries.then(() => {
-  countrySelect.$list.addEventListener('click', selectCountry)
+  countrySelect.$list.addEventListener('click', selectCountry);
   countrySelect.$list.addEventListener('countryIsReady', () => {
-    citySelect.$list.children[getSavedCityProp(savedCity).cityNum].click();
-  })
+    citySelect.$list.children[getSavedCityProps(savedCity).cityNum].click();
+  });
 
-  countrySelect.$list.children[getSavedCityProp(savedCity).countryId].click();
+  countrySelect.$list.children[getSavedCityProps(savedCity).countryId].click();
 });
 
 wrapper.addEventListener('click', function (e) {
@@ -58,7 +48,18 @@ wrapper.addEventListener('click', function (e) {
   }
 })
 
-const countryIsReady = new Event('countryIsReady')
+function getSavedCityProps(saved) {
+  if (Object.keys(saved).length <= 2) {
+    return {
+      cityId: 0,
+      cityNum: 0,
+      country: 0,
+      countryId: 0,
+    };
+  } else {
+    return saved;
+  }
+}
 
 function selectCountry(e) {
   const country = e.target.dataset.id;
@@ -81,7 +82,7 @@ function selectCountry(e) {
           list: '.select-list',
           input: '.select-input',
           search: true,
-          selectedId: getSavedCityProp(savedCity).cityNum,
+          selectedId: getSavedCityProps(savedCity).cityNum,
           data: list
         })
         setStatus(statusImg, 'done');
@@ -149,35 +150,26 @@ async function getRequest(url) {
     setStatus(statusImg, 'error');
     return;
   }
-
   return await req.json();
-
 }
 
 function filterListByCountry(list, country) {
-
   return list.filter(city => {
     return city.country === country;
   })
-
 }
 
 function createCityList(list) {
-
   let html = '';
-
   let sortlist = list.sort(sortByName);
 
   sortlist.forEach(city => {
-
     if (city.name === '-') {
       return;
     }
-
     const cityHtml = `
 		<option value=${city.id}>${city.name}</option>
 		`
-
     html += cityHtml;
   });
 
