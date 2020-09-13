@@ -65,8 +65,10 @@ function selectCountry(e) {
   const country = e.target.dataset.id;
   const countryId = countrySelect.options.data.findIndex(item => item.id === country).toString();
 
-  savedCity.country = country;
-  savedCity.countryId = countryId;
+  if (countryId != savedCity.countryId) {
+    savedCity.cityNum = '0';
+    savedCity.cityId = '0';
+  }
 
   setStatus(statusImg, 'request');
   getRequest(`./json/city.${country.toLowerCase()}.list.json`)
@@ -86,6 +88,8 @@ function selectCountry(e) {
           data: list
         })
         setStatus(statusImg, 'done');
+        savedCity.country = country;
+        savedCity.countryId = countryId;
         countrySelect.$list.dispatchEvent(countryIsReady);
       }, 500);
     })
