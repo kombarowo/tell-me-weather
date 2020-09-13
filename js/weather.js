@@ -1,179 +1,220 @@
-"use strict";
+'use strict';
 
-const apikey = 'f6e1a268304df81602c77e0e849a6eba',
-	storage = localStorage,
-	savedCity = (localStorage.getItem('savedCity')) ? JSON.parse(storage.getItem('savedCity')) : {};
+const
+  apikey = 'f6e1a268304df81602c77e0e849a6eba',
+  storage = localStorage,
+  savedCity = (localStorage.getItem('savedCity')) ? JSON.parse(storage.getItem('savedCity')) : {};
 
 //DOM Elements
-const selectCountries = document.querySelector('.country');
-const selectCityes = document.querySelector('.city');
-const statusImg = document.querySelector('.status img');
-const weatherInfo = document.querySelector('.weather__info');
+let countrySelect, citySelect;
 
-//Events
-selectCountries.addEventListener('input', () => selectCountry(selectCountries));
+const
+  wrapper = document.querySelector('.weather__select'),
+  statusImg = document.querySelector('.status img'),
+  weatherInfo = document.querySelector('.weather__info');
 
-if (Object.keys(savedCity).length > 0) {
-	setSavedCity(savedCity);
-} else {
-	selectCountry(selectCountries);
+const renderCountries = new Promise((resolve, reject) => {
+  countrySelect = new Select('country', {
+    list: '.select-list',
+    input: '.select-input',
+    search: false,
+    selectedId: getSavedCityProps(savedCity).countryId,
+    data: [
+      { id: 'ru', name: 'Russia' },
+      { id: 'ua', name: 'Ukraine' },
+      { id: 'by', name: 'Belarus' },
+    ]
+  })
+
+  resolve()
+})
+
+const countryIsReady = new Event('countryIsReady')
+renderCountries.then(() => {
+  countrySelect.$list.addEventListener('click', selectCountry);
+  countrySelect.$list.addEventListener('countryIsReady', () => {
+    citySelect.$list.children[getSavedCityProps(savedCity).cityNum].click();
+  });
+
+  countrySelect.$list.children[getSavedCityProps(savedCity).countryId].click();
+});
+
+wrapper.addEventListener('click', function (e) {
+  if (e.target.closest('#city') && e.target.tagName === 'LI') {
+    const cityId = e.target.dataset.id
+    const cityNum = citySelect.options.data.findIndex(item => item.id == cityId)
+
+    selectCity(cityId, cityNum)
+  }
+})
+
+function getSavedCityProps(saved) {
+  if (Object.keys(saved).length <= 2) {
+    return {
+      cityId: 0,
+      cityNum: 0,
+      country: 0,
+      countryId: 0,
+    };
+  } else {
+    return saved;
+  }
 }
 
-selectCityes.addEventListener('input', () => selectCity(selectCityes));
+function selectCountry(e) {
+  const country = e.target.dataset.id;
+  const countryId = countrySelect.options.data.findIndex(item => item.id === country).toString();
 
-// Functions
-async function setSavedCity(saved) {
-	selectCountry(selectCountries, saved);
+  if (countryId != savedCity.countryId) {
+    savedCity.cityNum = '0';
+    savedCity.cityId = '0';
+  }
+
+  setStatus(statusImg, 'request');
+  getRequest(`./json/city.${country.toLowerCase()}.list.json`)
+    .then(list => {
+      list = list.sort(sortByName);
+      list = clearCityes(list);
+      setTimeout(() => {
+        if (citySelect) {
+          citySelect.destroy()
+        }
+        document.querySelector('.weather__select').insertAdjacentHTML('beforeend', '<div id="city"></div>')
+        citySelect = new Select('city', {
+          list: '.select-list',
+          input: '.select-input',
+          search: true,
+          selectedId: getSavedCityProps(savedCity).cityNum,
+          data: list
+        })
+        setStatus(statusImg, 'done');
+        savedCity.country = country;
+        savedCity.countryId = countryId;
+        countrySelect.$list.dispatchEvent(countryIsReady);
+      }, 500);
+    })
+    .catch(e => {
+      return;
+    })
 }
 
-function selectCountry(select, saved = '') {
-	let selectId = select.selectedIndex;
-	let country = select[selectId].value;
+function selectCity(cityId, cityNum) {
+  savedCity.cityId = cityId.toString();
+  savedCity.cityNum = cityNum.toString();
 
-	if (saved) {
-		select.selectedIndex = saved.countryId;
-		country = saved.country;
-	} else {
-		savedCity.country = country;
-		savedCity.countryId = selectId;
-	}
+  setStatus(statusImg, 'request');
+  getRequest(`https://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apikey}`)
+    .then(res => {
+      if (!res) {
+        return;
+      }
+      setTimeout(() => {
+        setStatus(statusImg, 'done');
+        weatherInfo.innerHTML = createWeatherInfo(res);
 
-	setStatus(statusImg, 'request');
-	getRequest(`./json/city.${country.toLowerCase()}.list.json`)
-		.then(resp => filterListByCountry(resp, country))
-		.then(list => {
-			setTimeout(() => {
-				selectCityes.innerHTML = createCityList(list);
-				setStatus(statusImg, 'done');
-				selectCity(selectCityes, saved);
-			}, 500);
-		})
-		.catch(e => {
-			return;
-		})
+        storage.setItem('savedCity', JSON.stringify(savedCity));
+      }, 500);
+    })
 }
 
 function setStatus(el, status) {
-	switch (status) {
-		case 'request': {
-			selectCountries.setAttribute('disabled', '');
-			selectCityes.classList.add('hidden');
-			weatherInfo.classList.add('hidden');
-			el.setAttribute('src', './img/spin.gif');
-			break;
-		}
-		case 'done': {
-			selectCountries.removeAttribute('disabled');
-			selectCityes.classList.remove('hidden');
-			weatherInfo.classList.remove('hidden');
-			el.setAttribute('src', '');
-			break;
-		}
-		case 'error': {
-			const errorMessage = document.createElement('div')
-			errorMessage.classList.add('error');
-			errorMessage.textContent = 'Something went wrong, try again later...';
-			el.parentNode.insertAdjacentElement('beforebegin', errorMessage)
-			el.setAttribute('src', './img/error.webp');
-			break;
-		}
-	}
+  switch (status) {
+    case 'request': {
+      if (citySelect) {
+        citySelect.$el.classList.add('hidden--op');
+        weatherInfo.classList.add('hidden--op');
+      }
+      el.setAttribute('src', './img/spin.gif');
+      break;
+    }
+    case 'done': {
+      if (citySelect) {
+        citySelect.$el.classList.remove('hidden--op');
+        weatherInfo.classList.remove('hidden--op');
+      }
+      el.setAttribute('src', '');
+      break;
+    }
+    case 'error': {
+      const errorMessage = document.createElement('div')
+      errorMessage.classList.add('error');
+      errorMessage.textContent = 'Something went wrong, try again later...';
+      el.parentNode.insertAdjacentElement('beforebegin', errorMessage)
+      el.setAttribute('src', './img/error.webp');
+      break;
+    }
+  }
 }
 
 async function getRequest(url) {
 
-	const req = await fetch(url);
+  const req = await fetch(url);
 
-	if (!req.ok) {
-		setStatus(statusImg, 'error');
-		return;
-	}
-
-	return await req.json();
-
+  if (!req.ok) {
+    setStatus(statusImg, 'error');
+    return;
+  }
+  return await req.json();
 }
 
 function filterListByCountry(list, country) {
-
-	return list.filter(city => {
-		return city.country === country;
-	})
-
+  return list.filter(city => {
+    return city.country === country;
+  })
 }
 
 function createCityList(list) {
+  let html = '';
+  let sortlist = list.sort(sortByName);
 
-	let html = '';
-
-	let sortlist = list.sort(sortCity);
-
-	sortlist.forEach(city => {
-
-		if (city.name === '-') {
-			return;
-		}
-
-		const cityHtml = `
+  sortlist.forEach(city => {
+    if (city.name === '-') {
+      return;
+    }
+    const cityHtml = `
 		<option value=${city.id}>${city.name}</option>
 		`
+    html += cityHtml;
+  });
 
-		html += cityHtml;
-	});
-
-	return html;
-
-	function sortCity(a, b) {
-		if (a.name > b.name) {
-			return 1;
-		}
-		if (a.name < b.name) {
-			return -1;
-		}
-		return 0;
-	}
-
+  return html;
 }
 
-function selectCity(select, saved = '') {
-	let selectId = select.selectedIndex;
-	let cityId = select[selectId].value;
+function sortByName(a, b) {
+  if (a.name > b.name) {
+    return 1;
+  }
+  if (a.name < b.name) {
+    return -1;
+  }
+  return 0;
+}
 
-	if (saved) {
-		select.selectedIndex = saved.cityNum;
-		selectId = select.selectedIndex;
-		cityId = select[selectId].value;
-	} else {
-		savedCity.cityNum = selectId;
-		savedCity.cityId = cityId;
-		storage.setItem('savedCity', JSON.stringify(savedCity));
-	}
-
-	setStatus(statusImg, 'request');
-	getRequest(`https://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apikey}`)
-		.then(res => {
-			setTimeout(() => {
-				setStatus(statusImg, 'done');
-				return weatherInfo.innerHTML = createWeatherInfo(res);
-			}, 500);
-		})
+function clearCityes(arr) {
+  const newArr = arr.filter(city => city.name != '-' && !city.name.match(/[а-я]/))
+  return newArr
 }
 
 function createWeatherInfo(obj) {
-	let {
-		name,
-		main: { temp },
-		wind: { speed },
-		weather: [{ main, icon }],
-		sys: { sunrise, sunset }
-	} = obj;
+  if (!obj) {
+    return;
+  }
 
-	temp = convertTemp(temp);
-	speed = `${speed} m/s`;
-	icon = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-	sunrise = new Date(convertTimeStamp(sunrise)).toLocaleTimeString();
-	sunset = new Date(convertTimeStamp(sunset)).toLocaleTimeString();
+  let {
+    name,
+    main: { temp },
+    wind: { speed },
+    weather: [{ main, icon }],
+    sys: { sunrise, sunset }
+  } = obj;
 
-	let html = `
+  temp = convertTemp(temp);
+  speed = `${speed} m/s`;
+  icon = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+  sunrise = new Date(convertTimeStamp(sunrise)).toLocaleTimeString();
+  sunset = new Date(convertTimeStamp(sunset)).toLocaleTimeString();
+
+  let html = `
 		<h1 class="weather__title">${name}</h1>
 		<div class="weather__image">
 			<img src="${icon}" alt="weather-image">
@@ -186,15 +227,15 @@ function createWeatherInfo(obj) {
 			<div class="sunset">Sunset: ${sunset}</div>
 		</div>
 	`
-	return html;
+  return html;
 }
 
 function convertTemp(t) {
-	return Math.floor(t - 273.15);
+  return Math.floor(t - 273.15);
 }
 
 function convertTimeStamp(ts) {
-	return ts * 1000;
+  return ts * 1000;
 }
 
 
