@@ -1,23 +1,23 @@
 'use strict'
 
-class Select {
+export default class Select {
   constructor(selector, options) {
     this.$el = document.getElementById(selector)
     this.options = options
 
-    this.#render()
-    this.#setup()
+    this.render()
+    this.setup()
 
     this.selectedId = options.selectedId
   }
 
-  #render() {
+  render() {
     const { data, selectedId, search } = this.options
 
     this.$el.innerHTML = getTemplate(data, selectedId, search)
   }
 
-  #setup() {
+  setup() {
     this.onClick = this.onClick.bind(this)
     this.onInput = this.onInput.bind(this)
     this.closeByOverlay = this.closeByOverlay.bind(this)
@@ -155,6 +155,8 @@ function isSelected(id, selectedId) {
     return ''
   }
 }
+
+export { getTemplate, isSelected };
 
 
 
