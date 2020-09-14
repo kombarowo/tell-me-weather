@@ -1,3 +1,9 @@
+import 'custom-event-polyfill';
+import 'element-closest-polyfill';
+import 'whatwg-fetch';
+import '../css/style.scss';
+import Select, { getTemplate, isSelected } from './select';
+
 'use strict';
 
 const
@@ -29,7 +35,8 @@ const renderCountries = new Promise((resolve, reject) => {
   resolve()
 })
 
-const countryIsReady = new Event('countryIsReady')
+const countryIsReady = new CustomEvent('countryIsReady', { bubbles: true, cancelable: false });
+
 renderCountries.then(() => {
   countrySelect.$list.addEventListener('click', selectCountry);
   countrySelect.$list.addEventListener('countryIsReady', () => {
@@ -71,7 +78,7 @@ function selectCountry(e) {
   }
 
   setStatus(statusImg, 'request');
-  getRequest(`./json/city.${country.toLowerCase()}.list.json`)
+  getRequest(`assets/json/city.${country.toLowerCase()}.list.json`)
     .then(list => {
       list = list.sort(sortByName);
       list = clearCityes(list);
@@ -124,7 +131,7 @@ function setStatus(el, status) {
         citySelect.$el.classList.add('hidden--op');
         weatherInfo.classList.add('hidden--op');
       }
-      el.setAttribute('src', './img/spin.gif');
+      el.setAttribute('src', 'assets//img/spin.gif');
       break;
     }
     case 'done': {
@@ -140,7 +147,7 @@ function setStatus(el, status) {
       errorMessage.classList.add('error');
       errorMessage.textContent = 'Something went wrong, try again later...';
       el.parentNode.insertAdjacentElement('beforebegin', errorMessage)
-      el.setAttribute('src', './img/error.webp');
+      el.setAttribute('src', 'assets/img/error.webp');
       break;
     }
   }
@@ -149,35 +156,11 @@ function setStatus(el, status) {
 async function getRequest(url) {
 
   const req = await fetch(url);
-
   if (!req.ok) {
     setStatus(statusImg, 'error');
     return;
   }
   return await req.json();
-}
-
-function filterListByCountry(list, country) {
-  return list.filter(city => {
-    return city.country === country;
-  })
-}
-
-function createCityList(list) {
-  let html = '';
-  let sortlist = list.sort(sortByName);
-
-  sortlist.forEach(city => {
-    if (city.name === '-') {
-      return;
-    }
-    const cityHtml = `
-		<option value=${city.id}>${city.name}</option>
-		`
-    html += cityHtml;
-  });
-
-  return html;
 }
 
 function sortByName(a, b) {
@@ -237,6 +220,5 @@ function convertTemp(t) {
 function convertTimeStamp(ts) {
   return ts * 1000;
 }
-
 
 
