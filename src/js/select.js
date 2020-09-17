@@ -3,13 +3,14 @@
 export default class Select {
   constructor(idSelector, options) {
     this.$el = document.getElementById(idSelector);
-    this.$list = options.list;
-    this.$input = options.input;
     this.search = options.search;
     this.data = options.data;
     this.selectedId = options.selectedId;
 
     this.render()
+    this.$list = this.$el.querySelector(options.list);
+    this.$input = this.$el.querySelector(options.input);
+
     this.setup()
   }
 
@@ -18,15 +19,10 @@ export default class Select {
   }
 
   setup() {
-    this.onClick = this.onClick.bind(this)
-    this.onInput = this.onInput.bind(this)
-    this.closeByOverlay = this.closeByOverlay.bind(this)
-    this.$list = this.$el.querySelector(this.$list)
-    this.$input = this.$el.querySelector(this.$input)
+    this.$el.addEventListener('click', (e) => this.onClick.call(this, e));
+    this.$input.addEventListener('input', (e) => this.onInput.call(this, e));
 
-    this.$el.addEventListener('click', this.onClick)
-    this.$input.addEventListener('input', this.onInput)
-    window.addEventListener('click', this.closeByOverlay)
+    window.addEventListener('click', (e) => this.closeByOverlay.call(this, e));
   }
 
   closeByOverlay(e) {
@@ -94,8 +90,7 @@ export default class Select {
 
     if (searchItem) {
       const selectedId = this.data[searchItem.dataset.id]
-      const currentScroll = searchItem.offsetTop - this.$list.offsetHeight / 2 + searchItem.offsetHeight
-      this.$list.scrollTop = currentScroll
+      this.$list.scrollTop = searchItem.offsetTop - this.$list.offsetHeight / 2 + searchItem.offsetHeight
     }
   }
 
@@ -144,7 +139,7 @@ export default class Select {
       `
     } else {
       return `
-          <div class="select-input" data-type="input">${data[selectedId].name }</div>
+          <div class="select-input" data-type="input">${data[selectedId].name}</div>
           <ul class="select-list">${list.join('')}</ul>
       `
     }
