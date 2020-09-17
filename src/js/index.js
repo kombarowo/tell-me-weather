@@ -49,7 +49,7 @@ renderCountries.then(() => {
 wrapper.addEventListener('click', function (e) {
   if (e.target.closest('#city') && e.target.tagName === 'LI') {
     const cityId = e.target.dataset.id
-    const cityNum = citySelect.options.data.findIndex(item => item.id == cityId)
+    const cityNum = citySelect.data.findIndex(item => item.id == cityId)
 
     selectCity(cityId, cityNum)
   }
@@ -70,7 +70,7 @@ function getSavedCityProps(saved) {
 
 function selectCountry(e) {
   const country = e.target.dataset.id;
-  const countryId = countrySelect.options.data.findIndex(item => item.id === country).toString();
+  const countryId = countrySelect.data.findIndex(item => item.id === country).toString();
 
   if (countryId != savedCity.countryId) {
     savedCity.cityNum = '0';

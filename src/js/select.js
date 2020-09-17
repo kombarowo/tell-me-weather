@@ -1,28 +1,27 @@
 'use strict'
 
 export default class Select {
-  constructor(selector, options) {
-    this.$el = document.getElementById(selector)
-    this.options = options
+  constructor(idSelector, options) {
+    this.$el = document.getElementById(idSelector);
+    this.$list = options.list;
+    this.$input = options.input;
+    this.data = options.data;
+    this.selectedId = options.selectedId;
 
     this.render()
     this.setup()
-
-    this.selectedId = options.selectedId
   }
 
   render() {
-    const { data, selectedId, search } = this.options
-
-    this.$el.innerHTML = getTemplate(data, selectedId, search)
+    this.$el.innerHTML = this.getTemplate();
   }
 
   setup() {
     this.onClick = this.onClick.bind(this)
     this.onInput = this.onInput.bind(this)
     this.closeByOverlay = this.closeByOverlay.bind(this)
-    this.$list = this.$el.querySelector(this.options.list)
-    this.$input = this.$el.querySelector(this.options.input)
+    this.$list = this.$el.querySelector(this.$list)
+    this.$input = this.$el.querySelector(this.$input)
 
     this.$el.addEventListener('click', this.onClick)
     this.$input.addEventListener('input', this.onInput)
@@ -36,7 +35,7 @@ export default class Select {
   }
 
   onClick(e) {
-    const { type } = e.target.dataset
+    const {type} = e.target.dataset
 
     switch (type) {
       case 'input': {
@@ -93,7 +92,7 @@ export default class Select {
       .find(item => item.textContent.toLowerCase().startsWith(searchValue))
 
     if (searchItem) {
-      const selectedId = this.options.data[searchItem.dataset.id]
+      const selectedId = this.data[searchItem.dataset.id]
       const currentScroll = searchItem.offsetTop - this.$list.offsetHeight / 2 + searchItem.offsetHeight
       this.$list.scrollTop = currentScroll
     }
@@ -125,38 +124,37 @@ export default class Select {
     window.removeEventListener('click', this.closeByOverlay)
     this.$el.remove()
   }
-}
 
-function getTemplate(data, selectedId = '', search) {
-  const list = data.map((item, idx) => {
-    return `
-      <li class="select-item ${isSelected(idx, selectedId)}" data-id="${item.id}" data-type="item">${item.name}</li>
+  getTemplate() {
+    const {data, search, selectedId} = this
+    const list = data.map((item, idx) => {
+      return `
+      <li class="select-item ${this.isSelected(idx)}" data-id="${item.id}" data-type="item">${item.name}</li>
     `
-  })
+    })
 
-  let value;
-  if (selectedId) {
-    value = data[selectedId].name;
-  } else {
-    value = 'Choose...'
+    let value;
+    if (selectedId) {
+      value = data[selectedId].name;
+    } else {
+      value = 'Choose...'
+    }
+
+    if (search) {
+      return `<input class="select-input" value="${value}" placeholder="Choose..." type="text" data-type="input"><ul class="select-list">${list.join('')}</ul>`
+    } else {
+      return `<div class="select-input" data-type="input">${value}</div><ul class="select-list">${list.join('')}</ul>`
+    }
   }
 
-  if (search) {
-    return `<input class="select-input" value="${value}" placeholder="Choose..." type="text" data-type="input"><ul class="select-list">${list.join('')}</ul>`
-  } else {
-    return `<div class="select-input" data-type="input">${value}</div><ul class="select-list">${list.join('')}</ul>`
+  isSelected(id) {
+    if (id === this.selectedId) {
+      return 'selected'
+    } else {
+      return ''
+    }
   }
 }
-
-function isSelected(id, selectedId) {
-  if (id == selectedId) {
-    return 'selected'
-  } else {
-    return ''
-  }
-}
-
-export { getTemplate, isSelected };
 
 
 
