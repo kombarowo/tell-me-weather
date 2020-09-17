@@ -137,8 +137,6 @@ export default class Select {
     `
     })
 
-    let value = (selectedId) ? data[selectedId].name : 'Choose...';
-
     if (search) {
       return `
           <input class="select-input" placeholder="Choose..." type="text" data-type="input">
@@ -146,7 +144,7 @@ export default class Select {
       `
     } else {
       return `
-          <div class="select-input" data-type="input">${value}</div>
+          <div class="select-input" data-type="input">${data[selectedId].name }</div>
           <ul class="select-list">${list.join('')}</ul>
       `
     }
