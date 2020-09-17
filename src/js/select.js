@@ -5,6 +5,7 @@ export default class Select {
     this.$el = document.getElementById(idSelector);
     this.$list = options.list;
     this.$input = options.input;
+    this.search = options.search;
     this.data = options.data;
     this.selectedId = options.selectedId;
 
@@ -39,8 +40,8 @@ export default class Select {
 
     switch (type) {
       case 'input': {
-        if (this.options.selectedId) {
-          this.selectItem(this.options.data[this.selectedId].id)
+        if (this.selectedId) {
+          this.selectItem(this.data[this.selectedId].id)
         }
         this.open()
         break
@@ -127,32 +128,32 @@ export default class Select {
 
   getTemplate() {
     const {data, search, selectedId} = this
+
     const list = data.map((item, idx) => {
       return `
-      <li class="select-item ${this.isSelected(idx)}" data-id="${item.id}" data-type="item">${item.name}</li>
+      <li class="select-item ${this.isSelected(idx)}" data-id="${item.id}" data-type="item">
+        ${item.name}
+      </li>
     `
     })
 
-    let value;
-    if (selectedId) {
-      value = data[selectedId].name;
-    } else {
-      value = 'Choose...'
-    }
+    let value = (selectedId) ? data[selectedId].name : 'Choose...';
 
     if (search) {
-      return `<input class="select-input" value="${value}" placeholder="Choose..." type="text" data-type="input"><ul class="select-list">${list.join('')}</ul>`
+      return `
+          <input class="select-input" placeholder="Choose..." type="text" data-type="input">
+          <ul class="select-list">${list.join('')}</ul>
+      `
     } else {
-      return `<div class="select-input" data-type="input">${value}</div><ul class="select-list">${list.join('')}</ul>`
+      return `
+          <div class="select-input" data-type="input">${value}</div>
+          <ul class="select-list">${list.join('')}</ul>
+      `
     }
   }
 
   isSelected(id) {
-    if (id === this.selectedId) {
-      return 'selected'
-    } else {
-      return ''
-    }
+    return (id === this.selectedId) ? 'selected' : '';
   }
 }
 
