@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 export default class Select {
   constructor(idSelector, options) {
@@ -7,11 +7,11 @@ export default class Select {
     this.data = options.data;
     this.selectedIndex = options.selectedIndex;
 
-    this.render()
+    this.render();
     this.$list = this.$el.querySelector(options.list);
     this.$input = this.$el.querySelector(options.input);
 
-    this.setup()
+    this.setup();
   }
 
   render() {
@@ -27,7 +27,7 @@ export default class Select {
 
   closeByOverlay(e) {
     if (!e.target.closest(`#${this.$el.getAttribute('id')}`)) {
-      this.close()
+      this.close();
     }
   }
 
@@ -35,13 +35,14 @@ export default class Select {
     switch (e.target.dataset.type) {
       case 'input': {
         if (this.selectedIndex) {
-          this.selectItem(this.data[this.selectedIndex].id.toString())
+          this.selectItem(this.data[this.selectedIndex].id.toString());
         }
-        this.open()
-        break
+        this.open();
+        break;
       }
       case 'item': {
-        this.selectItem(e.target.dataset.id.toString())
+        this.selectItem(e.target.dataset.id.toString());
+        break;
       }
     }
   }
@@ -74,24 +75,24 @@ export default class Select {
   }
 
   onInput(e) {
-    this.open()
-    const items = this.$list.querySelectorAll('li')
+    this.open();
+    const items = this.$list.querySelectorAll('li');
     const searchValue = e.target.value.toLowerCase().trim();
 
     const searchItem = Array.from(items)
-      .find(item => item.textContent.toLowerCase().trim().startsWith(searchValue))
+      .find(item => item.textContent.toLowerCase().trim().startsWith(searchValue));
 
     if (searchItem) {
-      this.$list.scrollTop = searchItem.offsetTop - this.$list.offsetHeight / 2 + searchItem.offsetHeight
+      this.$list.scrollTop = searchItem.offsetTop - this.$list.offsetHeight / 2 + searchItem.offsetHeight;
     }
   }
 
   open() {
-    this.$list.classList.add('opened')
+    this.$list.classList.add('opened');
   }
 
   close() {
-    this.$list.classList.remove('opened')
+    this.$list.classList.remove('opened');
   }
 
   isOpened() {
@@ -107,7 +108,7 @@ export default class Select {
   }
 
   getTemplate() {
-    const {data, search, selectedIndex} = this
+    const {data, search, selectedIndex} = this;
 
     const list = data.map((item, idx) => {
       return `
