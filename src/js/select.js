@@ -86,10 +86,6 @@ export default class Select {
     }
   }
 
-  // toggle() {
-  //   this.isOpened() ? this.close() : this.open()
-  // }
-
   open() {
     this.$list.classList.add('opened')
   }
@@ -106,6 +102,7 @@ export default class Select {
     this.$el.removeEventListener('click', this.onClick);
     this.$input.removeEventListener('input', this.onInput);
     this.$el.remove();
+
     window.removeEventListener('click', this.closeByOverlay);
   }
 
