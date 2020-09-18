@@ -75,14 +75,13 @@ export default class Select {
 
   onInput(e) {
     this.open()
-    const searchValue = e.target.value.toLowerCase()
     const items = this.$list.querySelectorAll('li')
+    const searchValue = e.target.value.toLowerCase().trim();
 
     const searchItem = Array.from(items)
       .find(item => item.textContent.toLowerCase().trim().startsWith(searchValue))
 
     if (searchItem) {
-      const selectedId = this.data[searchItem.dataset.id]
       this.$list.scrollTop = searchItem.offsetTop - this.$list.offsetHeight / 2 + searchItem.offsetHeight
     }
   }
