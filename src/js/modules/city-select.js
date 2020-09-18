@@ -46,7 +46,10 @@ export default class CitySelect extends Select {
       setStatus: this.setStatus
     })
       .getData()
-      .then(cityInfo => console.log(cityInfo))
+      .then(cityInfo => {
+        this.currentCityInfo = cityInfo;
+        window.dispatchEvent(cityIsSelected);
+      })
   }
 
   setStatus(status) {

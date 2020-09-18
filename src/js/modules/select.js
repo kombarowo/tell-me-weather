@@ -109,7 +109,7 @@ export default class Select {
   destroy() {
     this.$el.removeEventListener('click', this.onClick);
     this.$input.removeEventListener('input', this.onInput);
-    this.$el.remove();
+    this.$el.innerHTML = '';
 
     window.removeEventListener('click', this.closeByOverlay);
   }

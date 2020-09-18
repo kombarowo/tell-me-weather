@@ -35,20 +35,23 @@ const countrySelect = new CountrySelect('country', {
 });
 
 window.addEventListener('countryIsSelected', createCityList);
+window.addEventListener('cityIsSelected', createWeatherByCity);
 
 function createCityList() {
   if (citySelect) {
     citySelect.destroy();
-  } else {
-    citySelect = new CitySelect('city', {
-      list: '.select-list',
-      input: '.select-input',
-      search: true,
-      statusImg: '.status img',
-      data: countrySelect.cityListByCountry
-    })
-    window.ccc = citySelect;
   }
+  citySelect = new CitySelect('city', {
+    list: '.select-list',
+    input: '.select-input',
+    search: true,
+    statusImg: '.status img',
+    data: countrySelect.cityListByCountry
+  })
+}
+
+function createWeatherByCity() {
+
 }
 
 // const countryIsReady = new CustomEvent('countryIsReady', { bubbles: true, cancelable: false });
