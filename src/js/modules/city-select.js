@@ -1,18 +1,11 @@
 import Select from "./select";
 import Request from "../services/request";
-import CitySelect from "./city-select";
 
-export default class CountrySelect extends Select {
+export default class CitySelect extends Select {
   constructor(idSelector, options) {
     super(idSelector, options);
 
     this.$statusImg = document.querySelector(options.statusImg);
-  }
-
-  setup() {
-    this.$el.addEventListener('click', (e) => this.onClick.call(this, e));
-
-    window.addEventListener('click', (e) => this.closeByOverlay.call(this, e));
   }
 
   onClick(e) {
@@ -26,31 +19,34 @@ export default class CountrySelect extends Select {
       }
       case 'item': {
         this.selectItem(e.target.dataset.id.toString());
-        this.setCountry(e);
+        this.setCity(e);
         break;
       }
     }
   }
 
-  setCountry(e) {
-    const countryIsSelected = new CustomEvent('countryIsSelected', { bubbles: true, cancelable: false });
-    const countryId = e.target.dataset.id;
-    const countryIndex = this.data.findIndex(item => item.id === countryId).toString();
-    this.selectedCountry = {id: countryId, index: countryIndex};
+  setCity(e) {
+    const cityIsSelected = new CustomEvent('cityIsSelected', {bubbles: true, cancelable: false});
+    const cityId = e.target.dataset.id.toString();
+    const cityIndex = this.data.findIndex(item => item.id.toString() === cityId).toString();
+    this.selectedCity = {
+      id: cityId,
+      index: cityIndex,
+      lon: this.selectedItem.coord.lon,
+      lat: this.selectedItem.coord.lat,
+    };
 
-    new Request(`assets/json/city.${countryId.toLowerCase()}.list.json`, {
+    new Request('https://api.openweathermap.org/data/2.5/onecall?' +
+      `lat=${this.selectedCity.lat}` +
+      `&lon=${this.selectedCity.lon}` +
+      '&exclude=hourly,daily&appid=f6e1a268304df81602c77e0e849a6eba', {
       sendingMessage: 'request',
       successMessage: 'done',
       errorMessage: 'error',
       setStatus: this.setStatus
     })
       .getData()
-      .then(unSortCityList => unSortCityList.sort(this.sortByName))
-      .then(sortCityList => this.clearCities(sortCityList))
-      .then(clearSortCityList => {
-        this.cityListByCountry = clearSortCityList;
-        window.dispatchEvent(countryIsSelected);
-      })
+      .then(cityInfo => console.log(cityInfo))
   }
 
   setStatus(status) {
@@ -80,19 +76,5 @@ export default class CountrySelect extends Select {
         break;
       }
     }
-  }
-
-  sortByName(a, b) {
-    if (a.name > b.name) {
-      return 1;
-    }
-    if (a.name < b.name) {
-      return -1;
-    }
-    return 0;
-  }
-
-  clearCities(arr) {
-    return arr.filter(city => city.name !== '-' && !city.name.match(/[а-я]/));
   }
 }
