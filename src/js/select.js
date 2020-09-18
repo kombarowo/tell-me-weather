@@ -32,56 +32,50 @@ export default class Select {
   }
 
   onClick(e) {
-    const {type} = e.target.dataset
-
-    switch (type) {
+    switch (e.target.dataset.type) {
       case 'input': {
         if (this.selectedIndex) {
-          this.selectItem(this.data[this.selectedIndex].id)
+          this.selectItem(this.data[this.selectedIndex].id.toString())
         }
         this.open()
         break
       }
       case 'item': {
-        this.selectItem(e.target.dataset.id)
+        this.selectItem(e.target.dataset.id.toString())
       }
     }
   }
 
   selectItem(id) {
-    const items = this.$list.querySelectorAll('li')
-    items[this.selectedIndex].classList.remove('selected')
+    const items = this.$list.querySelectorAll('li');
+    const newSelectedIndex = Array.from(items).findIndex(item => item.dataset.id === id);
+    const selectItem = items[newSelectedIndex];
 
-    const selectIndex = Array.from(items).findIndex(item => item.dataset.id == id)
-
-    const selectItem = items[selectIndex]
-
-    setTimeout(() => {
-      this.$list.scrollTop = selectItem.offsetTop - this.$list.offsetHeight / 2 + selectItem.offsetHeight
-    }, 0);
-
-    items[selectIndex].classList.add('selected')
+    items[this.selectedIndex].classList.remove('selected');
+    items[newSelectedIndex].classList.add('selected');
+    this.selectedIndex = newSelectedIndex;
 
     switch (this.$input.tagName) {
       case 'DIV': {
-        this.$input.textContent = items[selectIndex].textContent;
+        this.$input.textContent = items[newSelectedIndex].textContent.trim();
         break;
       }
       case 'INPUT': {
-        this.$input.value = items[selectIndex].textContent.trim();
+        this.$input.value = items[newSelectedIndex].textContent.trim();
         break;
       }
     }
 
-    this.selectedIndex = selectIndex
+    this.close();
 
-    this.close()
+    setTimeout(() => {
+      this.$list.scrollTop = selectItem.offsetTop - this.$list.offsetHeight / 2 + selectItem.offsetHeight
+    }, 0);
   }
 
   onInput(e) {
     this.open()
     const searchValue = e.target.value.toLowerCase()
-    console.log(searchValue)
     const items = this.$list.querySelectorAll('li')
 
     const searchItem = Array.from(items)
