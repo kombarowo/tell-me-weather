@@ -1,11 +1,9 @@
-'use strict';
-
 export default class Select {
   constructor(idSelector, options) {
     this.$el = document.getElementById(idSelector);
     this.search = options.search;
     this.data = options.data;
-    this.selectedIndex = (options.selectedIndex) ? options.selectedIndex : null;
+    this.selectedIndex = (options.selectedIndex) ? options.selectedIndex : '';
 
     this.render();
     this.$list = this.$el.querySelector(options.list);
@@ -54,12 +52,13 @@ export default class Select {
   selectItem(id) {
     const items = this.$list.querySelectorAll('li');
     const newSelectedIndex = Array.from(items).findIndex(item => item.dataset.id === id);
-    this.selectedItem = items[newSelectedIndex];
+    this.$selectedElement = items[newSelectedIndex];
 
     try {
       items[this.selectedIndex].classList.remove('selected');
     } catch (e) {
     }
+    this.$input.classList.remove('placeholder');
     items[newSelectedIndex].classList.add('selected');
     this.selectedIndex = newSelectedIndex.toString();
 
@@ -75,12 +74,14 @@ export default class Select {
       }
     }
 
+    this.selectedItem = this.data[this.selectedIndex];
+    console.log(this.selectedItem);
     this.close();
   }
 
   setScroll() {
     setTimeout(() => {
-      this.$list.scrollTop = this.selectedItem.offsetTop - this.$list.offsetHeight / 2 + this.selectedItem.offsetHeight
+      this.$list.scrollTop = this.$selectedElement.offsetTop - this.$list.offsetHeight / 2 + this.$selectedElement.offsetHeight
     }, 0);
   }
 
@@ -131,7 +132,7 @@ export default class Select {
       `
     } else {
       return `
-          <div class="select-input" data-type="input">Choose...</div>
+          <div class="select-input placeholder" data-type="input">Choose...</div>
           <ul class="select-list">${list.join('')}</ul>
       `
     }

@@ -121,7 +121,7 @@ option {
   text-align: left;
 }
 
-@media (max-width:600px) {
+@media (max-width: 600px) {
   .title {
     font-size: 30px;
     padding: 25px 0px 25px 0px;
@@ -173,6 +173,20 @@ option {
   box-sizing: border-box;
   font-size: 20px;
   width: 225px;
+}
+
+#country {
+  cursor: pointer;
+}
+
+::placeholder {
+  color: gray;
+  opacity: 1;
+}
+
+.placeholder {
+  color: gray;
+  opacity: 1;
 }
 
 .select-overlay {

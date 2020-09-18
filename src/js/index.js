@@ -3,6 +3,7 @@ import 'element-closest-polyfill';
 import 'whatwg-fetch';
 import '../css/style.scss';
 import Select from "./modules/select";
+import CountrySelect from "./modules/country-select";
 
 'use strict';
 
@@ -20,11 +21,11 @@ const
   weatherInfo = document.querySelector('.weather__info');
 
 const renderCountries = new Promise((resolve, reject) => {
-  countrySelect = new Select('country', {
+  countrySelect = new CountrySelect('country', {
     list: '.select-list',
     input: '.select-input',
     search: false,
-    selectedIndex: getSavedCityProps(savedCity).countryId,
+    // selectedIndex: getSavedCityProps(savedCity).countryId,
     data: [
       { id: 'ru', name: 'Russia' },
       { id: 'ua', name: 'Ukraine' },
@@ -91,7 +92,7 @@ function selectCountry(e) {
           list: '.select-list',
           input: '.select-input',
           search: true,
-          selectedIndex: getSavedCityProps(savedCity).cityNum,
+          // selectedIndex: getSavedCityProps(savedCity).cityNum,
           data: list
         })
         setStatus(statusImg, 'done');
