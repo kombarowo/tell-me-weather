@@ -5,13 +5,17 @@ export default class Select {
     this.$el = document.getElementById(idSelector);
     this.search = options.search;
     this.data = options.data;
-    this.selectedIndex = options.selectedIndex;
+    this.selectedIndex = (options.selectedIndex) ? options.selectedIndex : null;
 
     this.render();
     this.$list = this.$el.querySelector(options.list);
     this.$input = this.$el.querySelector(options.input);
 
     this.setup();
+    try {
+      this.selectItem(this.data[this.selectedIndex].id.toString());
+    } catch (e) {
+    }
   }
 
   render() {
@@ -35,7 +39,7 @@ export default class Select {
     switch (e.target.dataset.type) {
       case 'input': {
         if (this.selectedIndex) {
-          this.selectItem(this.data[this.selectedIndex].id.toString());
+          this.setScroll()
         }
         this.open();
         break;
@@ -50,27 +54,33 @@ export default class Select {
   selectItem(id) {
     const items = this.$list.querySelectorAll('li');
     const newSelectedIndex = Array.from(items).findIndex(item => item.dataset.id === id);
-    const selectItem = items[newSelectedIndex];
+    this.selectedItem = items[newSelectedIndex];
 
-    items[this.selectedIndex].classList.remove('selected');
+    try {
+      items[this.selectedIndex].classList.remove('selected');
+    } catch (e) {
+    }
     items[newSelectedIndex].classList.add('selected');
-    this.selectedIndex = newSelectedIndex;
+    this.selectedIndex = newSelectedIndex.toString();
 
+    const value = (this.selectedIndex) ? items[newSelectedIndex].textContent.trim() : 'Choose...';
     switch (this.$input.tagName) {
       case 'DIV': {
-        this.$input.textContent = items[newSelectedIndex].textContent.trim();
+        this.$input.textContent = value;
         break;
       }
       case 'INPUT': {
-        this.$input.value = items[newSelectedIndex].textContent.trim();
+        this.$input.value = value;
         break;
       }
     }
 
     this.close();
+  }
 
+  setScroll() {
     setTimeout(() => {
-      this.$list.scrollTop = selectItem.offsetTop - this.$list.offsetHeight / 2 + selectItem.offsetHeight
+      this.$list.scrollTop = this.selectedItem.offsetTop - this.$list.offsetHeight / 2 + this.selectedItem.offsetHeight
     }, 0);
   }
 
@@ -95,10 +105,6 @@ export default class Select {
     this.$list.classList.remove('opened');
   }
 
-  isOpened() {
-    return (this.$list.classList.contains('opened')) ? true : false;
-  }
-
   destroy() {
     this.$el.removeEventListener('click', this.onClick);
     this.$input.removeEventListener('input', this.onInput);
@@ -108,7 +114,7 @@ export default class Select {
   }
 
   getTemplate() {
-    const {data, search, selectedIndex} = this;
+    const {data, search} = this;
 
     const list = data.map((item, idx) => {
       return `
@@ -125,7 +131,7 @@ export default class Select {
       `
     } else {
       return `
-          <div class="select-input" data-type="input">${data[selectedIndex].name}</div>
+          <div class="select-input" data-type="input">Choose...</div>
           <ul class="select-list">${list.join('')}</ul>
       `
     }

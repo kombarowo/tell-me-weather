@@ -2,7 +2,7 @@ import 'custom-event-polyfill';
 import 'element-closest-polyfill';
 import 'whatwg-fetch';
 import '../css/style.scss';
-import Select, { getTemplate, isSelected } from './select';
+import Select from "./modules/select";
 
 'use strict';
 
@@ -40,10 +40,10 @@ const countryIsReady = new CustomEvent('countryIsReady', { bubbles: true, cancel
 renderCountries.then(() => {
   countrySelect.$list.addEventListener('click', selectCountry);
   countrySelect.$list.addEventListener('countryIsReady', () => {
-    citySelect.$list.children[getSavedCityProps(savedCity).cityNum].click();
+    // citySelect.$list.children[getSavedCityProps(savedCity).cityNum].click();
   });
 
-  countrySelect.$list.children[getSavedCityProps(savedCity).countryId].click();
+  // countrySelect.$list.children[getSavedCityProps(savedCity).countryId].click();
 });
 
 wrapper.addEventListener('click', function (e) {
