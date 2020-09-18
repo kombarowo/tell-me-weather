@@ -10,7 +10,8 @@ export default class CountrySelect extends Select {
   }
 
   setup() {
-    this.$el.addEventListener('click', (e) => this.onClick.call(this, e));
+    this.clickHandler = this.clickHandler.bind(this);
+    this.$el.addEventListener('click', this.clickHandler);
 
     window.addEventListener('click', (e) => this.closeByOverlay.call(this, e));
   }

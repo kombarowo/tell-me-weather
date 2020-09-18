@@ -39,7 +39,7 @@ export default class CitySelect extends Select {
     new Request('https://api.openweathermap.org/data/2.5/onecall?' +
       `lat=${this.selectedCity.lat}` +
       `&lon=${this.selectedCity.lon}` +
-      '&exclude=hourly,daily&appid=f6e1a268304df81602c77e0e849a6eba', {
+      '&exclude=daily&appid=f6e1a268304df81602c77e0e849a6eba', {
       sendingMessage: 'request',
       successMessage: 'done',
       errorMessage: 'error',

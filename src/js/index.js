@@ -4,6 +4,7 @@ import 'whatwg-fetch';
 import '../css/style.scss';
 import CountrySelect from "./modules/country-select";
 import CitySelect from "./modules/city-select";
+import Dat from "./services/data-methods";
 
 'use strict';
 
@@ -33,6 +34,7 @@ const countrySelect = new CountrySelect('country', {
   ],
   // selectedIndex: getSavedCityProps(savedCity).countryId,
 });
+window.ccc = countrySelect;
 
 window.addEventListener('countryIsSelected', createCityList);
 window.addEventListener('cityIsSelected', createWeatherByCity);
@@ -51,7 +53,40 @@ function createCityList() {
 }
 
 function createWeatherByCity() {
+  console.log(citySelect.currentCityInfo.hourly)
 
+  if (!citySelect.currentCityInfo.hourly) {
+    return;
+  }
+
+  // let {
+  //   name,
+  //   main: {temp},
+  //   wind: {speed},
+  //   weather: [{main, icon}],
+  //   sys: {sunrise, sunset}
+  // } = obj;
+  //
+  // temp = convertTemp(temp);
+  // speed = `${speed} m/s`;
+  // icon = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+  // sunrise = new Date(convertTimeStamp(sunrise)).toLocaleTimeString();
+  // sunset = new Date(convertTimeStamp(sunset)).toLocaleTimeString();
+
+  let html = `
+		<h1 class="weather__title">${'name'}</h1>
+		<div class="weather__image">
+			<img src="${'icon'}" alt="weather-image">
+		</div>
+		<div class="weather__row">
+			<div class="desc">${'main'}</div>
+			<div class="temp">${'temp'} &#8451;</div>
+			<div class="wind">Wind speed: ${'speed'}</div>
+			<div class="sunrise">Sunrise: ${'sunrise'}</div>
+			<div class="sunset">Sunset: ${'sunset'}</div>
+		</div>
+	`
+  document.querySelector('.weather__info').innerHTML = html;
 }
 
 // const countryIsReady = new CustomEvent('countryIsReady', { bubbles: true, cancelable: false });
@@ -182,41 +217,6 @@ function createWeatherByCity() {
 //   return await req.json();
 // }
 
-
-// function createWeatherInfo(obj) {
-//   if (!obj) {
-//     return;
-//   }
-//
-//   let {
-//     name,
-//     main: { temp },
-//     wind: { speed },
-//     weather: [{ main, icon }],
-//     sys: { sunrise, sunset }
-//   } = obj;
-//
-//   temp = convertTemp(temp);
-//   speed = `${speed} m/s`;
-//   icon = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-//   sunrise = new Date(convertTimeStamp(sunrise)).toLocaleTimeString();
-//   sunset = new Date(convertTimeStamp(sunset)).toLocaleTimeString();
-//
-//   let html = `
-// 		<h1 class="weather__title">${name}</h1>
-// 		<div class="weather__image">
-// 			<img src="${icon}" alt="weather-image">
-// 		</div>
-// 		<div class="weather__row">
-// 			<div class="desc">${main}</div>
-// 			<div class="temp">${temp} &#8451;</div>
-// 			<div class="wind">Wind speed: ${speed}</div>
-// 			<div class="sunrise">Sunrise: ${sunrise}</div>
-// 			<div class="sunset">Sunset: ${sunset}</div>
-// 		</div>
-// 	`
-//   return html;
-// }
 
 // function convertTemp(t) {
 //   return Math.floor(t - 273.15);

@@ -21,7 +21,8 @@ export default class Select {
   }
 
   setup() {
-    this.$el.addEventListener('click', (e) => this.onClick.call(this, e));
+    this.clickHandler = this.clickHandler.bind(this);
+    this.$el.addEventListener('click', this.clickHandler);
     this.$input.addEventListener('input', (e) => this.onInput.call(this, e));
 
     window.addEventListener('click', (e) => this.closeByOverlay.call(this, e));
@@ -47,6 +48,10 @@ export default class Select {
         break;
       }
     }
+  }
+
+  clickHandler(e) {
+    this.onClick(e);
   }
 
   selectItem(id) {
@@ -75,7 +80,7 @@ export default class Select {
     }
 
     this.selectedItem = this.data[this.selectedIndex];
-    console.log(this.selectedItem);
+    // console.log(this.selectedItem);
     this.close();
   }
 
@@ -107,11 +112,11 @@ export default class Select {
   }
 
   destroy() {
-    this.$el.removeEventListener('click', this.onClick);
-    this.$input.removeEventListener('input', this.onInput);
+    this.$el.removeEventListener('click', this.clickHandler);
+    this.$input.removeEventListener('input', (e) => this.onInput.call(this, e));
     this.$el.innerHTML = '';
 
-    window.removeEventListener('click', this.closeByOverlay);
+    window.removeEventListener('click', (e) => this.closeByOverlay.call(this, e));
   }
 
   getTemplate() {
