@@ -86,9 +86,9 @@ export default class Select {
     }
   }
 
-  toggle() {
-    this.isOpened() ? this.close() : this.open()
-  }
+  // toggle() {
+  //   this.isOpened() ? this.close() : this.open()
+  // }
 
   open() {
     this.$list.classList.add('opened')
@@ -99,11 +99,7 @@ export default class Select {
   }
 
   isOpened() {
-    if (this.$list.classList.contains('opened')) {
-      return true
-    } else {
-      return false
-    }
+    return (this.$list.classList.contains('opened')) ? true : false;
   }
 
   destroy() {
