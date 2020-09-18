@@ -5,7 +5,7 @@ export default class Select {
     this.$el = document.getElementById(idSelector);
     this.search = options.search;
     this.data = options.data;
-    this.selectedId = options.selectedId;
+    this.selectedIndex = options.selectedIndex;
 
     this.render()
     this.$list = this.$el.querySelector(options.list);
@@ -36,8 +36,8 @@ export default class Select {
 
     switch (type) {
       case 'input': {
-        if (this.selectedId) {
-          this.selectItem(this.data[this.selectedId].id)
+        if (this.selectedIndex) {
+          this.selectItem(this.data[this.selectedIndex].id)
         }
         this.open()
         break
@@ -50,32 +50,30 @@ export default class Select {
 
   selectItem(id) {
     const items = this.$list.querySelectorAll('li')
-    items[this.selectedId].classList.remove('selected')
+    items[this.selectedIndex].classList.remove('selected')
 
     const selectIndex = Array.from(items).findIndex(item => item.dataset.id == id)
 
-    const selectItem = Array.from(items)[selectIndex]
-    let currentScroll = selectItem.offsetTop - this.$list.offsetHeight / 2 + selectItem.offsetHeight
+    const selectItem = items[selectIndex]
 
     setTimeout(() => {
-      currentScroll = selectItem.offsetTop - this.$list.offsetHeight / 2 + selectItem.offsetHeight
-      this.$list.scrollTop = currentScroll
+      this.$list.scrollTop = selectItem.offsetTop - this.$list.offsetHeight / 2 + selectItem.offsetHeight
     }, 0);
 
-    Array.from(items)[selectIndex].classList.add('selected')
+    items[selectIndex].classList.add('selected')
 
     switch (this.$input.tagName) {
       case 'DIV': {
-        this.$input.textContent = Array.from(items)[selectIndex].textContent;
+        this.$input.textContent = items[selectIndex].textContent;
         break;
       }
       case 'INPUT': {
-        this.$input.value = Array.from(items)[selectIndex].textContent;
+        this.$input.value = items[selectIndex].textContent.trim();
         break;
       }
     }
 
-    this.selectedId = selectIndex
+    this.selectedIndex = selectIndex
 
     this.close()
   }
@@ -83,10 +81,11 @@ export default class Select {
   onInput(e) {
     this.open()
     const searchValue = e.target.value.toLowerCase()
+    console.log(searchValue)
     const items = this.$list.querySelectorAll('li')
 
     const searchItem = Array.from(items)
-      .find(item => item.textContent.toLowerCase().startsWith(searchValue))
+      .find(item => item.textContent.toLowerCase().trim().startsWith(searchValue))
 
     if (searchItem) {
       const selectedId = this.data[searchItem.dataset.id]
@@ -115,14 +114,14 @@ export default class Select {
   }
 
   destroy() {
-    this.$el.removeEventListener('click', this.onClick)
-    this.$input.removeEventListener('input', this.onInput)
-    window.removeEventListener('click', this.closeByOverlay)
-    this.$el.remove()
+    this.$el.removeEventListener('click', this.onClick);
+    this.$input.removeEventListener('input', this.onInput);
+    this.$el.remove();
+    window.removeEventListener('click', this.closeByOverlay);
   }
 
   getTemplate() {
-    const {data, search, selectedId} = this
+    const {data, search, selectedIndex} = this
 
     const list = data.map((item, idx) => {
       return `
@@ -139,14 +138,14 @@ export default class Select {
       `
     } else {
       return `
-          <div class="select-input" data-type="input">${data[selectedId].name}</div>
+          <div class="select-input" data-type="input">${data[selectedIndex].name}</div>
           <ul class="select-list">${list.join('')}</ul>
       `
     }
   }
 
   isSelected(id) {
-    return (id === this.selectedId) ? 'selected' : '';
+    return (id === this.selectedIndex) ? 'selected' : '';
   }
 }
 

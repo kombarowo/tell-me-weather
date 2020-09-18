@@ -24,7 +24,7 @@ const renderCountries = new Promise((resolve, reject) => {
     list: '.select-list',
     input: '.select-input',
     search: false,
-    selectedId: getSavedCityProps(savedCity).countryId,
+    selectedIndex: getSavedCityProps(savedCity).countryId,
     data: [
       { id: 'ru', name: 'Russia' },
       { id: 'ua', name: 'Ukraine' },
@@ -91,7 +91,7 @@ function selectCountry(e) {
           list: '.select-list',
           input: '.select-input',
           search: true,
-          selectedId: getSavedCityProps(savedCity).cityNum,
+          selectedIndex: getSavedCityProps(savedCity).cityNum,
           data: list
         })
         setStatus(statusImg, 'done');
