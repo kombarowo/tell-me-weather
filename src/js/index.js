@@ -53,43 +53,41 @@ function createCityList() {
 }
 
 function createWeatherByCity() {
-  console.log(citySelect.currentCityInfo.hourly)
-
-  if (!citySelect.currentCityInfo.hourly) {
+  const info = citySelect.currentCityInfo;
+  if (!info) {
     return;
   }
 
-  // let {
-  //   name,
-  //   main: {temp},
-  //   wind: {speed},
-  //   weather: [{main, icon}],
-  //   sys: {sunrise, sunset}
-  // } = obj;
-  //
-  // temp = convertTemp(temp);
-  // speed = `${speed} m/s`;
-  // icon = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-  // sunrise = new Date(convertTimeStamp(sunrise)).toLocaleTimeString();
-  // sunset = new Date(convertTimeStamp(sunset)).toLocaleTimeString();
+  let {current: {sunrise, sunset}, timezone_offset} = info;
+  const timezoneOffset = timezone_offset/3600;
+  sunrise = new Dat(sunrise).getDate().toLocaleTimeString();
+  sunset = new Dat(sunset).getDate().toLocaleTimeString();
+  let data = [];
+  info.hourly.forEach(item => {
+    let {dt, temp, wind_speed, weather: [{main, icon}],} = item;
+    data.push({
+      date: new Dat(dt).getDate().toLocaleString(),
+      temp: convertTemp(temp),
+      wind: wind_speed,
+      desc: main,
+      icon: `https://openweathermap.org/img/wn/${icon}@2x.png`,
+    })
+  })
 
   let html = `
-		<h1 class="weather__title">${'name'}</h1>
+		<h1 class="weather__title">${citySelect.selectedCity.name}</h1>
 		<div class="weather__image">
-			<img src="${'icon'}" alt="weather-image">
+			<img src="${data[0].icon}" alt="weather-image">
 		</div>
 		<div class="weather__row">
-			<div class="desc">${'main'}</div>
-			<div class="temp">${'temp'} &#8451;</div>
-			<div class="wind">Wind speed: ${'speed'}</div>
-			<div class="sunrise">Sunrise: ${'sunrise'}</div>
-			<div class="sunset">Sunset: ${'sunset'}</div>
+		  <div class="date">${data[0].date}</div>
+		  <div class="timezone">${timezoneOffset} hours</div>
+			<div class="desc">${data[0].desc}</div>
+			<div class="temp">${data[0].temp} &#8451;</div>
+			<div class="wind">Wind speed: ${data[0].wind}</div>
+			<div class="sunrise">Sunrise: ${sunrise}</div>
+			<div class="sunset">Sunset: ${sunset}</div>
 		</div>
-		<div class="select-range">
-		  <div class="thumb"></div>
-		  <div class="from">0</div>
-		  <div class="to">100</div>
-    </div>
 	`
   document.querySelector('.weather__info').innerHTML = html;
 }
@@ -223,12 +221,8 @@ function createWeatherByCity() {
 // }
 
 
-// function convertTemp(t) {
-//   return Math.floor(t - 273.15);
-// }
-//
-// function convertTimeStamp(ts) {
-//   return ts * 1000;
-// }
+function convertTemp(t) {
+  return Math.floor(t - 273.15);
+}
 
 

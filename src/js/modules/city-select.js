@@ -32,6 +32,7 @@ export default class CitySelect extends Select {
     this.selectedCity = {
       id: cityId,
       index: cityIndex,
+      name: e.target.textContent.trim(),
       lon: this.selectedItem.coord.lon,
       lat: this.selectedItem.coord.lat,
     };
