@@ -252,3 +252,40 @@ option {
 .selected {
   background: rgb(228, 228, 228);
 }
+
+/*select-range*/
+
+.select-range {
+  border-radius: 5px;
+  background: #E0E0E0;
+  background: linear-gradient(left top, #E0E0E0, #EEEEEE);
+  width: 310px;
+  height: 15px;
+  margin: 25px auto;
+
+  position: relative;
+}
+
+.thumb {
+  width: 10px;
+  height: 25px;
+  border-radius: 3px;
+  position: absolute;
+  top: -5px;
+  background: blue;
+  cursor: pointer;
+}
+
+.from, .to {
+  position: absolute;
+  transform: translate(0, 25px);
+  top: 0;
+}
+
+.from {
+  left: 0;
+}
+
+.to {
+  right: 0;
+}

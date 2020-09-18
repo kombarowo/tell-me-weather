@@ -85,6 +85,11 @@ function createWeatherByCity() {
 			<div class="sunrise">Sunrise: ${'sunrise'}</div>
 			<div class="sunset">Sunset: ${'sunset'}</div>
 		</div>
+		<div class="select-range">
+		  <div class="thumb"></div>
+		  <div class="from">0</div>
+		  <div class="to">100</div>
+    </div>
 	`
   document.querySelector('.weather__info').innerHTML = html;
 }
