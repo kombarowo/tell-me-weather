@@ -21,6 +21,8 @@ window.addEventListener('DOMContentLoaded', function () {
     activeClass: 'opened'
   });
 
+  console.log('da');
+
   const countrySelect = new CountrySelect('country', {
     list: '.select-list',
     input: '.select-input',

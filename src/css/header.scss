@@ -23,15 +23,6 @@
   }
 }
 
-@keyframes scroll {
-  0% {
-    max-height: 0px;
-  }
-  100% {
-    max-height: 100px
-  }
-}
-
 .header__body {
   display: flex;
   align-items: center;
@@ -57,6 +48,7 @@
   transition: all 0.3s ease-out;
 }
 
+
 .header__selects.opened {
   right: 0;
 }
@@ -79,6 +71,8 @@
     background: none;
     height: auto;
     padding: 0;
+
+    min-height: auto;
   }
   .header__title {
     font-size: 20px;
