@@ -53,6 +53,7 @@
 		"custom-event-polyfill": "^1.0.7",
 		"element-closest-polyfill": "^1.0.2",
 		"normalize.css": "^8.0.1",
+		"swiper": "^6.2.0",
 		"whatwg-fetch": "^3.4.1"
 	}
 }

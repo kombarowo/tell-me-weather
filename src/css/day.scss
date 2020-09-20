@@ -25,7 +25,6 @@
 
   &__icon img {
     width: 60px;
-    transform: translate(-25%, 0);
   }
 
   &__max-temp {
@@ -33,9 +32,8 @@
     margin-left: auto;
   }
 
-  &__bottom {
+  &__bottom{
     box-sizing: border-box;
-    display: flex;
     font-size: 18px;
 
     opacity: 0;
@@ -43,6 +41,11 @@
     transition: all 0.5s;
     border-bottom: 1px solid rgba(255,255,255,0.5);
     border-top: 1px solid rgba(255,255,255,0.5);
+    overflow: hidden;
+
+    &-wrapper{
+      display: flex;
+    }
   }
 
   &__bottom.opened {

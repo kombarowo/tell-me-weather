@@ -2,11 +2,13 @@ import 'custom-event-polyfill';
 import 'element-closest-polyfill';
 import 'whatwg-fetch';
 import '../css/style.scss';
+import 'swiper/swiper-bundle.css';
 import CountrySelect from "./modules/country-select";
 import CitySelect from "./modules/city-select";
 import Dat from "./services/data-methods";
 import Menu from "./modules/menu";
 import Accordion from "./modules/accordion";
+import Swiper from 'swiper';
 import {getSavedCity, getSavedCountry} from "./modules/savedcity";
 
 window.addEventListener('DOMContentLoaded', function () {
@@ -85,6 +87,20 @@ window.addEventListener('DOMContentLoaded', function () {
 	  `
 
     setWeatherStatus(html);
+
+    const todaySlider = new Swiper('.day--today .day__bottom', {
+      wrapperClass: 'day__bottom-wrapper',
+      slideClass: 'hour',
+      slidesPerView: 5,
+      slidesPerGroup: 1
+    });
+
+    const tomorrowSlider = new Swiper('.day--tomorrow .day__bottom', {
+      wrapperClass: 'day__bottom-wrapper',
+      slideClass: 'hour',
+      slidesPerView: 5,
+      slidesPerGroup: 1
+    });
   }
 
   function createToday(data) {
@@ -102,7 +118,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
       minTemp = (temp < minTemp) ? temp : minTemp;
       maxTemp = (temp > maxTemp) ? temp : maxTemp;
-      todayHours += createHour(date.getHours(), icon, temp);
+      todayHours += createHour(date.getHours(), icon, temp, true);
     })
 
     return `
@@ -113,7 +129,9 @@ window.addEventListener('DOMContentLoaded', function () {
           <div class="day__min-temp">${minTemp}&deg;<sub>min</sub></div>
         </div>
         <div class="day__bottom">
-          ${todayHours}
+          <div class="day__bottom-wrapper">
+            ${todayHours}
+          </div>
         </div>
       </div>
     `
@@ -136,7 +154,7 @@ window.addEventListener('DOMContentLoaded', function () {
       tomorrowDate = date;
       minTemp = (temp < minTemp) ? temp : minTemp;
       maxTemp = (temp > maxTemp) ? temp : maxTemp;
-      tomorrowHours += createHour(date.getHours(), icon, temp);
+      tomorrowHours += createHour(date.getHours(), icon, temp, false);
     })
 
     return `
@@ -147,14 +165,19 @@ window.addEventListener('DOMContentLoaded', function () {
           <div class="day__min-temp">${minTemp}&deg;<sub>min</sub></div>
         </div>
         <div class="day__bottom">
-          ${tomorrowHours}
+          <div class="day__bottom-wrapper">
+            ${tomorrowHours}
+          </div>
         </div>
       </div>
     `
   }
 
 
-  function createHour(hour, icon, temp) {
+  function createHour(hour, icon, temp, isToday) {
+    if (new Date().getHours() === hour && isToday) {
+      hour = 'Now';
+    }
     return `
     <div class="hour">
       <div class="day__hour">${hour}</div>
