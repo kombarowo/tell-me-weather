@@ -1,11 +1,17 @@
 import Select from "./select";
 import Request from "../services/request";
+import {saveCity, getSavedCity} from "./savedcity";
 
 export default class CitySelect extends Select {
   constructor(idSelector, options) {
     super(idSelector, options);
 
     this.$statusImg = document.querySelector(options.statusImg);
+
+    if (this.selectedIndex) {
+      console.log('da')
+      this.setCity('', this.data[this.selectedIndex].id, this.selectedIndex);
+    }
   }
 
   onClick(e) {
@@ -25,14 +31,14 @@ export default class CitySelect extends Select {
     }
   }
 
-  setCity(e) {
+  setCity(e = '', cId = '', cIndex = '') {
     const cityIsSelected = new CustomEvent('cityIsSelected', {bubbles: true, cancelable: false});
-    const cityId = e.target.dataset.id.toString();
-    const cityIndex = this.data.findIndex(item => item.id.toString() === cityId).toString();
+    const cityId = cId ? cId : e.target.dataset.id.toString();
+    const cityIndex = cIndex ? cIndex : this.data.findIndex(item => item.id.toString() === cityId).toString();
     this.selectedCity = {
       id: cityId,
       index: cityIndex,
-      name: e.target.textContent.trim(),
+      name: e ? e.target.textContent.trim() : this.data[this.selectedIndex].name,
       lon: this.selectedItem.coord.lon,
       lat: this.selectedItem.coord.lat,
     };
@@ -48,6 +54,7 @@ export default class CitySelect extends Select {
     })
       .getData()
       .then(cityInfo => {
+        saveCity({id: this.selectedCity.id, index: this.selectedCity.index, name: this.selectedCity.name});
         this.currentCityInfo = cityInfo;
         window.dispatchEvent(cityIsSelected);
       })

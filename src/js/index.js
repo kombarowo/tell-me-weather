@@ -5,76 +5,64 @@ import '../css/style.scss';
 import CountrySelect from "./modules/country-select";
 import CitySelect from "./modules/city-select";
 import Dat from "./services/data-methods";
+import {getSavedCountry, getSavedCity} from "./modules/savedcity";
 
-'use strict';
+window.addEventListener('DOMContentLoaded', function () {
 
-const
-  apikey = 'f6e1a268304df81602c77e0e849a6eba',
-  storage = localStorage,
-  savedCity = (localStorage.getItem('savedCity')) ? JSON.parse(storage.getItem('savedCity')) : {};
-
-//DOM Elements
-// let countrySelect, citySelect;
-
-// const
-//   wrapper = document.querySelector('.weather__select'),
-//   statusImg = document.querySelector('.status img'),
-//   weatherInfo = document.querySelector('.weather__info');
-
-let citySelect;
-const countrySelect = new CountrySelect('country', {
-  list: '.select-list',
-  input: '.select-input',
-  search: false,
-  statusImg: '.status img',
-  data: [
-    {id: 'ru', name: 'Russia'},
-    {id: 'ua', name: 'Ukraine'},
-    {id: 'by', name: 'Belarus'},
-  ],
-  // selectedIndex: getSavedCityProps(savedCity).countryId,
-});
-window.ccc = countrySelect;
-
-window.addEventListener('countryIsSelected', createCityList);
-window.addEventListener('cityIsSelected', createWeatherByCity);
-
-function createCityList() {
-  if (citySelect) {
-    citySelect.destroy();
-  }
-  citySelect = new CitySelect('city', {
+  let citySelect;
+  const countrySelect = new CountrySelect('country', {
     list: '.select-list',
     input: '.select-input',
-    search: true,
+    search: false,
     statusImg: '.status img',
-    data: countrySelect.cityListByCountry
-  })
-}
+    data: [
+      {id: 'ru', name: 'Russia'},
+      {id: 'ua', name: 'Ukraine'},
+      {id: 'by', name: 'Belarus'},
+    ],
+    selectedIndex: getSavedCountry().index,
+  });
 
-function createWeatherByCity() {
-  const info = citySelect.currentCityInfo;
-  if (!info) {
-    return;
+  window.addEventListener('countryIsSelected', createCityList);
+  window.addEventListener('cityIsSelected', createWeatherByCity);
+
+  function createCityList() {
+    if (citySelect) {
+      citySelect.destroy();
+    }
+    citySelect = new CitySelect('city', {
+      list: '.select-list',
+      input: '.select-input',
+      search: true,
+      statusImg: '.status img',
+      data: countrySelect.cityListByCountry,
+      selectedIndex: getSavedCity().index,
+    })
   }
 
-  let {current: {sunrise, sunset}, timezone_offset} = info;
-  const timezoneOffset = timezone_offset/3600;
-  sunrise = new Dat(sunrise).getDate().toLocaleTimeString();
-  sunset = new Dat(sunset).getDate().toLocaleTimeString();
-  let data = [];
-  info.hourly.forEach(item => {
-    let {dt, temp, wind_speed, weather: [{main, icon}],} = item;
-    data.push({
-      date: new Dat(dt).getDate().toLocaleString(),
-      temp: convertTemp(temp),
-      wind: wind_speed,
-      desc: main,
-      icon: `https://openweathermap.org/img/wn/${icon}@2x.png`,
-    })
-  })
+  function createWeatherByCity() {
+    const info = citySelect.currentCityInfo;
+    if (!info) {
+      return;
+    }
 
-  let html = `
+    let {current: {sunrise, sunset}, timezone_offset} = info;
+    const timezoneOffset = timezone_offset / 3600;
+    sunrise = new Dat(sunrise).getDate().toLocaleTimeString();
+    sunset = new Dat(sunset).getDate().toLocaleTimeString();
+    let data = [];
+    info.hourly.forEach(item => {
+      let {dt, temp, wind_speed, weather: [{main, icon}],} = item;
+      data.push({
+        date: new Dat(dt).getDate().toLocaleString(),
+        temp: convertTemp(temp),
+        wind: wind_speed,
+        desc: main,
+        icon: `https://openweathermap.org/img/wn/${icon}@2x.png`,
+      })
+    })
+
+    let html = `
 		<h1 class="weather__title">${citySelect.selectedCity.name}</h1>
 		<div class="weather__image">
 			<img src="${data[0].icon}" alt="weather-image">
@@ -89,8 +77,10 @@ function createWeatherByCity() {
 			<div class="sunset">Sunset: ${sunset}</div>
 		</div>
 	`
-  document.querySelector('.weather__info').innerHTML = html;
-}
+    document.querySelector('.weather__info').innerHTML = html;
+  }
+})
+
 
 // const countryIsReady = new CustomEvent('countryIsReady', { bubbles: true, cancelable: false });
 

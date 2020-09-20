@@ -1,6 +1,6 @@
 import Select from "./select";
 import Request from "../services/request";
-import CitySelect from "./city-select";
+import {saveCountry, getSavedCountry} from "./savedcity";
 
 export default class CountrySelect extends Select {
   constructor(idSelector, options) {
@@ -12,6 +12,10 @@ export default class CountrySelect extends Select {
   setup() {
     this.clickHandler = this.clickHandler.bind(this);
     this.$el.addEventListener('click', this.clickHandler);
+
+    if (this.selectedIndex) {
+      this.setCountry('', this.data[this.selectedIndex].id, this.selectedIndex);
+    }
 
     window.addEventListener('click', (e) => this.closeByOverlay.call(this, e));
   }
@@ -33,10 +37,10 @@ export default class CountrySelect extends Select {
     }
   }
 
-  setCountry(e) {
-    const countryIsSelected = new CustomEvent('countryIsSelected', { bubbles: true, cancelable: false });
-    const countryId = e.target.dataset.id;
-    const countryIndex = this.data.findIndex(item => item.id === countryId).toString();
+  setCountry(e = '', cntryId = '', cntryIndex = '') {
+    const countryIsSelected = new CustomEvent('countryIsSelected', {bubbles: true, cancelable: false});
+    const countryId = cntryId ? cntryId : e.target.dataset.id;
+    const countryIndex = cntryIndex ? cntryIndex : this.data.findIndex(item => item.id === countryId).toString();
     this.selectedCountry = {id: countryId, index: countryIndex};
 
     new Request(`assets/json/city.${countryId.toLowerCase()}.list.json`, {
@@ -49,6 +53,7 @@ export default class CountrySelect extends Select {
       .then(unSortCityList => unSortCityList.sort(this.sortByName))
       .then(sortCityList => this.clearCities(sortCityList))
       .then(clearSortCityList => {
+        saveCountry({index: countryIndex});
         this.cityListByCountry = clearSortCityList;
         window.dispatchEvent(countryIsSelected);
       })
