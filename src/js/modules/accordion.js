@@ -17,7 +17,7 @@ export default class Accordion {
         const content = trigger.nextElementSibling;
         if (trigger) {
           this.closeAll();
-          content.classList.add('opened');
+          content.classList.toggle('opened');
           content.style.maxHeight = (content.scrollHeight + 50) + 'px';
         }
       })

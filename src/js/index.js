@@ -101,6 +101,10 @@ window.addEventListener('DOMContentLoaded', function () {
       slidesPerView: 5,
       slidesPerGroup: 1
     });
+
+    setTimeout(() => {
+      menu.close();
+    }, 500)
   }
 
   function createToday(data) {
