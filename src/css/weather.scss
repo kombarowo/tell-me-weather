@@ -7,13 +7,33 @@
   text-align: center;
 }
 
+.weather__greet{
+  opacity: 0;
+  animation-name: title;
+  animation-duration: 1s;
+  animation-delay: 1.25s;
+  animation-fill-mode: forwards;
+}
+
 .weather__text {
   padding: 10px;
   line-height: 2em;
+
+  opacity: 0;
+  animation-name: title;
+  animation-duration: 1s;
+  animation-delay: 1.5s;
+  animation-fill-mode: forwards;
 }
 
 .weather__author {
   margin-top: auto;
+
+  opacity: 0;
+  animation-name: title;
+  animation-duration: 1s;
+  animation-delay: 1.75s;
+  animation-fill-mode: forwards;
 }
 
 .weather__title {

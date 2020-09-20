@@ -1,10 +1,38 @@
 .header {
   border-bottom: 2px solid rgb(255, 255, 255, 0.1);
   position: relative;
+  animation-name: scroll;
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
 }
 
 .header__title {
   font-weight: 700;
+  opacity: 0;
+  animation-name: fadeInLeft;
+  animation-duration: 0.5s;
+  animation-delay: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translate(-100%, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes scroll {
+  0% {
+    max-height: 0px;
+  }
+  100% {
+    max-height: 100px
+  }
 }
 
 .header__body {

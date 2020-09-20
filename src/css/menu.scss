@@ -5,6 +5,23 @@
   height: 20px;
   background: none;
   border: none;
+
+  opacity: 0;
+  animation-name: fadeInRight;
+  animation-duration: 0.5s;
+  animation-delay: 2s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translate(100%, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
 }
 
 .menu__button:focus,
