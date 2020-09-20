@@ -1,17 +1,16 @@
 import Select from "./select";
 import Request from "../services/request";
-import {saveCity, getSavedCity} from "./savedcity";
+import {saveCity} from "./savedcity";
 
 export default class CitySelect extends Select {
   constructor(idSelector, options) {
     super(idSelector, options);
 
-    this.$statusImg = document.querySelector(options.statusImg);
-
     if (this.selectedIndex) {
       console.log('da')
       this.setCity('', this.data[this.selectedIndex].id, this.selectedIndex);
     }
+    this.$status = document.querySelector(options.status);
   }
 
   onClick(e) {
@@ -43,6 +42,7 @@ export default class CitySelect extends Select {
       lat: this.selectedItem.coord.lat,
     };
 
+    this.setStatus('request');
     new Request('https://api.openweathermap.org/data/2.5/onecall?' +
       `lat=${this.selectedCity.lat}` +
       `&lon=${this.selectedCity.lon}` +
@@ -55,35 +55,39 @@ export default class CitySelect extends Select {
       .getData()
       .then(cityInfo => {
         saveCity({id: this.selectedCity.id, index: this.selectedCity.index, name: this.selectedCity.name});
-        this.currentCityInfo = cityInfo;
         window.dispatchEvent(cityIsSelected);
+        setTimeout(() => {
+          this.currentCityInfo = cityInfo;
+          window.dispatchEvent(cityIsSelected);
+          this.setStatus('done');
+        }, 500)
       })
   }
 
   setStatus(status) {
     switch (status) {
       case 'request': {
-        if (citySelect) {
-          citySelect.$el.classList.add('hidden--op');
-          weatherInfo.classList.add('hidden--op');
-        }
-        this.$statusImg.setAttribute('src', 'assets//img/spin.gif');
+        // if (citySelect) {
+        //   citySelect.$el.classList.add('hidden--op');
+        //   weatherInfo.classList.add('hidden--op');
+        // }
+        this.$status.classList.add('requesting');
         break;
       }
       case 'done': {
-        if (citySelect) {
-          citySelect.$el.classList.remove('hidden--op');
-          weatherInfo.classList.remove('hidden--op');
-        }
-        this.$statusImg.setAttribute('src', '');
+        // if (citySelect) {
+        //   citySelect.$el.classList.remove('hidden--op');
+        //   weatherInfo.classList.remove('hidden--op');
+        // }
+        this.$status.classList.remove('requesting');
         break;
       }
       case 'error': {
         const errorMessage = document.createElement('div')
         errorMessage.classList.add('error');
         errorMessage.textContent = 'Something went wrong, try again later...';
-        this.$statusImg.parentNode.insertAdjacentElement('beforebegin', errorMessage)
-        this.$statusImg.setAttribute('src', 'assets/img/error.webp');
+        this.$status.parentNode.insertAdjacentElement('beforebegin', errorMessage)
+        this.$status.setAttribute('src', 'assets/img/error.webp');
         break;
       }
     }

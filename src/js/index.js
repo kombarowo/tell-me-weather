@@ -9,23 +9,24 @@ import {getSavedCountry, getSavedCity} from "./modules/savedcity";
 
 window.addEventListener('DOMContentLoaded', function () {
 
-  let citySelect;
+
   const countrySelect = new CountrySelect('country', {
     list: '.select-list',
     input: '.select-input',
     search: false,
-    statusImg: '.status img',
+    status: '.status',
     data: [
       {id: 'ru', name: 'Russia'},
       {id: 'ua', name: 'Ukraine'},
       {id: 'by', name: 'Belarus'},
     ],
-    selectedIndex: getSavedCountry().index,
+    selectedIndex: getSavedCountry().index
   });
 
   window.addEventListener('countryIsSelected', createCityList);
   window.addEventListener('cityIsSelected', createWeatherByCity);
 
+  let citySelect;
   function createCityList() {
     if (citySelect) {
       citySelect.destroy();
@@ -34,10 +35,14 @@ window.addEventListener('DOMContentLoaded', function () {
       list: '.select-list',
       input: '.select-input',
       search: true,
-      statusImg: '.status img',
+      status: '.status',
       data: countrySelect.cityListByCountry,
       selectedIndex: getSavedCity().index,
     })
+  }
+
+  function convertTemp(t) {
+    return Math.floor(t - 273.15);
   }
 
   function createWeatherByCity() {
@@ -61,25 +66,8 @@ window.addEventListener('DOMContentLoaded', function () {
         icon: `https://openweathermap.org/img/wn/${icon}@2x.png`,
       })
     })
-
-    let html = `
-		<h1 class="weather__title">${citySelect.selectedCity.name}</h1>
-		<div class="weather__image">
-			<img src="${data[0].icon}" alt="weather-image">
-		</div>
-		<div class="weather__row">
-		  <div class="date">${data[0].date}</div>
-		  <div class="timezone">${timezoneOffset} hours</div>
-			<div class="desc">${data[0].desc}</div>
-			<div class="temp">${data[0].temp} &#8451;</div>
-			<div class="wind">Wind speed: ${data[0].wind}</div>
-			<div class="sunrise">Sunrise: ${sunrise}</div>
-			<div class="sunset">Sunset: ${sunset}</div>
-		</div>
-	`
-    document.querySelector('.weather__info').innerHTML = html;
   }
-})
+});
 
 
 // const countryIsReady = new CustomEvent('countryIsReady', { bubbles: true, cancelable: false });
@@ -209,10 +197,5 @@ window.addEventListener('DOMContentLoaded', function () {
 //   }
 //   return await req.json();
 // }
-
-
-function convertTemp(t) {
-  return Math.floor(t - 273.15);
-}
 
 

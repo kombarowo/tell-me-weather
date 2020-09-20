@@ -1,12 +1,12 @@
 import Select from "./select";
 import Request from "../services/request";
-import {saveCountry, getSavedCountry} from "./savedcity";
+import {saveCountry} from "./savedcity";
 
 export default class CountrySelect extends Select {
   constructor(idSelector, options) {
     super(idSelector, options);
 
-    this.$statusImg = document.querySelector(options.statusImg);
+    this.$status = document.querySelector(options.status);
   }
 
   setup() {
@@ -43,6 +43,7 @@ export default class CountrySelect extends Select {
     const countryIndex = cntryIndex ? cntryIndex : this.data.findIndex(item => item.id === countryId).toString();
     this.selectedCountry = {id: countryId, index: countryIndex};
 
+    this.setStatus('request');
     new Request(`assets/json/city.${countryId.toLowerCase()}.list.json`, {
       sendingMessage: 'request',
       successMessage: 'done',
@@ -53,36 +54,39 @@ export default class CountrySelect extends Select {
       .then(unSortCityList => unSortCityList.sort(this.sortByName))
       .then(sortCityList => this.clearCities(sortCityList))
       .then(clearSortCityList => {
-        saveCountry({index: countryIndex});
-        this.cityListByCountry = clearSortCityList;
-        window.dispatchEvent(countryIsSelected);
+        setTimeout(() => {
+          saveCountry({index: countryIndex});
+          this.cityListByCountry = clearSortCityList;
+          window.dispatchEvent(countryIsSelected);
+          this.setStatus('done');
+        }, 500)
       })
   }
 
   setStatus(status) {
     switch (status) {
       case 'request': {
-        if (citySelect) {
-          citySelect.$el.classList.add('hidden--op');
-          weatherInfo.classList.add('hidden--op');
-        }
-        this.$statusImg.setAttribute('src', 'assets//img/spin.gif');
+        // if (citySelect) {
+        //   citySelect.$el.classList.add('hidden--op');
+        //   weatherInfo.classList.add('hidden--op');
+        // }
+        this.$status.classList.add('requesting');
         break;
       }
       case 'done': {
-        if (citySelect) {
-          citySelect.$el.classList.remove('hidden--op');
-          weatherInfo.classList.remove('hidden--op');
-        }
-        this.$statusImg.setAttribute('src', '');
+        // if (citySelect) {
+        //   citySelect.$el.classList.remove('hidden--op');
+        //   weatherInfo.classList.remove('hidden--op');
+        // }
+        this.$status.classList.remove('requesting');
         break;
       }
       case 'error': {
         const errorMessage = document.createElement('div')
         errorMessage.classList.add('error');
         errorMessage.textContent = 'Something went wrong, try again later...';
-        this.$statusImg.parentNode.insertAdjacentElement('beforebegin', errorMessage)
-        this.$statusImg.setAttribute('src', 'assets/img/error.webp');
+        this.$status.parentNode.insertAdjacentElement('beforebegin', errorMessage)
+        this.$status.setAttribute('src', 'assets/img/error.webp');
         break;
       }
     }
@@ -101,4 +105,6 @@ export default class CountrySelect extends Select {
   clearCities(arr) {
     return arr.filter(city => city.name !== '-' && !city.name.match(/[а-я]/));
   }
+
+
 }
