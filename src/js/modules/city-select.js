@@ -5,12 +5,12 @@ import {saveCity} from "./savedcity";
 export default class CitySelect extends Select {
   constructor(idSelector, options) {
     super(idSelector, options);
+    this.$status = document.querySelector(options.status);
 
     if (this.selectedIndex) {
       console.log('da')
       this.setCity('', this.data[this.selectedIndex].id, this.selectedIndex);
     }
-    this.$status = document.querySelector(options.status);
   }
 
   onClick(e) {

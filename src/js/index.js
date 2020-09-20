@@ -46,6 +46,7 @@ window.addEventListener('DOMContentLoaded', function () {
   }
 
   function createWeatherByCity() {
+    console.log('da')
     const info = citySelect.currentCityInfo;
     if (!info) {
       return;

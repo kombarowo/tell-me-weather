@@ -1,6 +1,6 @@
 import Select from "./select";
 import Request from "../services/request";
-import {saveCountry} from "./savedcity";
+import {saveCountry, getSavedCountry} from "./savedcity";
 
 export default class CountrySelect extends Select {
   constructor(idSelector, options) {
@@ -43,7 +43,6 @@ export default class CountrySelect extends Select {
     const countryIndex = cntryIndex ? cntryIndex : this.data.findIndex(item => item.id === countryId).toString();
     this.selectedCountry = {id: countryId, index: countryIndex};
 
-    this.setStatus('request');
     new Request(`assets/json/city.${countryId.toLowerCase()}.list.json`, {
       sendingMessage: 'request',
       successMessage: 'done',
@@ -54,12 +53,9 @@ export default class CountrySelect extends Select {
       .then(unSortCityList => unSortCityList.sort(this.sortByName))
       .then(sortCityList => this.clearCities(sortCityList))
       .then(clearSortCityList => {
-        setTimeout(() => {
-          saveCountry({index: countryIndex});
-          this.cityListByCountry = clearSortCityList;
-          window.dispatchEvent(countryIsSelected);
-          this.setStatus('done');
-        }, 500)
+        saveCountry({index: countryIndex});
+        this.cityListByCountry = clearSortCityList;
+        window.dispatchEvent(countryIsSelected);
       })
   }
 
@@ -70,7 +66,7 @@ export default class CountrySelect extends Select {
         //   citySelect.$el.classList.add('hidden--op');
         //   weatherInfo.classList.add('hidden--op');
         // }
-        this.$status.classList.add('requesting');
+        this.$statusImg.setAttribute('src', 'assets//img/spin.gif');
         break;
       }
       case 'done': {
@@ -78,15 +74,15 @@ export default class CountrySelect extends Select {
         //   citySelect.$el.classList.remove('hidden--op');
         //   weatherInfo.classList.remove('hidden--op');
         // }
-        this.$status.classList.remove('requesting');
+        this.$statusImg.setAttribute('src', '');
         break;
       }
       case 'error': {
         const errorMessage = document.createElement('div')
         errorMessage.classList.add('error');
         errorMessage.textContent = 'Something went wrong, try again later...';
-        this.$status.parentNode.insertAdjacentElement('beforebegin', errorMessage)
-        this.$status.setAttribute('src', 'assets/img/error.webp');
+        this.$statusImg.parentNode.insertAdjacentElement('beforebegin', errorMessage)
+        this.$statusImg.setAttribute('src', 'assets/img/error.webp');
         break;
       }
     }
@@ -105,6 +101,4 @@ export default class CountrySelect extends Select {
   clearCities(arr) {
     return arr.filter(city => city.name !== '-' && !city.name.match(/[а-я]/));
   }
-
-
 }
