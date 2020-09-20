@@ -1,6 +1,6 @@
 import Select from "./select";
 import Request from "../services/request";
-import {saveCity} from "./savedcity";
+import {getSavedCity, saveCity, getSavedCountry} from "./savedcity";
 
 export default class CitySelect extends Select {
   constructor(idSelector, options) {
@@ -8,7 +8,6 @@ export default class CitySelect extends Select {
     this.$status = document.querySelector(options.status);
 
     if (this.selectedIndex) {
-      console.log('da')
       this.setCity('', this.data[this.selectedIndex].id, this.selectedIndex);
     }
   }
@@ -54,8 +53,12 @@ export default class CitySelect extends Select {
     })
       .getData()
       .then(cityInfo => {
-        saveCity({id: this.selectedCity.id, index: this.selectedCity.index, name: this.selectedCity.name});
-        window.dispatchEvent(cityIsSelected);
+        const city = getSavedCity();
+        city.index = this.selectedCity.index;
+        city.id = this.selectedCity.id;
+        city.name = this.selectedCity.name
+        city.countryIndex = getSavedCountry().index;
+        saveCity(city);
         setTimeout(() => {
           this.currentCityInfo = cityInfo;
           window.dispatchEvent(cityIsSelected);

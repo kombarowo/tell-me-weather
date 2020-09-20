@@ -5,39 +5,190 @@ import '../css/style.scss';
 import CountrySelect from "./modules/country-select";
 import CitySelect from "./modules/city-select";
 import Dat from "./services/data-methods";
-import {getSavedCountry, getSavedCity} from "./modules/savedcity";
+import Menu from "./modules/menu";
+import Accordion from "./modules/accordion";
+import {getSavedCity, getSavedCountry} from "./modules/savedcity";
 
 window.addEventListener('DOMContentLoaded', function () {
+  window.addEventListener('countryIsSelected', createCityList);
+  window.addEventListener('cityIsSelected', createWeatherByCity);
 
+  const menu = new Menu('.header__selects', {
+    trigger: '.menu__button',
+    triggerActiveClass: 'menu__button--open',
+    activeClass: 'opened'
+  });
 
   const countrySelect = new CountrySelect('country', {
     list: '.select-list',
     input: '.select-input',
-    search: false,
     status: '.status',
     data: [
       {id: 'ru', name: 'Russia'},
       {id: 'ua', name: 'Ukraine'},
       {id: 'by', name: 'Belarus'},
     ],
-    selectedIndex: getSavedCountry().index
+    search: false,
+    selectedIndex: getSavedCity().countryIndex
   });
 
-  window.addEventListener('countryIsSelected', createCityList);
-  window.addEventListener('cityIsSelected', createWeatherByCity);
-
   let citySelect;
+  resetWeatherStatus();
+
   function createCityList() {
+    resetWeatherStatus();
+
+    const savedCountryIndex = getSavedCity().countryIndex;
+    const currentCountryIndex = getSavedCountry().index;
+    const cityIndex = (savedCountryIndex === currentCountryIndex) ? getSavedCity().index : '';
+
     if (citySelect) {
       citySelect.destroy();
     }
+
     citySelect = new CitySelect('city', {
       list: '.select-list',
       input: '.select-input',
-      search: true,
       status: '.status',
+      search: true,
       data: countrySelect.cityListByCountry,
-      selectedIndex: getSavedCity().index,
+      selectedIndex: cityIndex,
+    });
+  }
+
+  function createWeatherByCity() {
+    resetWeatherStatus();
+
+    const info = citySelect.currentCityInfo;
+    const data = [];
+
+    info.hourly.forEach(item => {
+      let {dt, temp, wind_speed, weather: [{main, icon}],} = item;
+      data.push({
+        date: new Dat(dt).getDate(),
+        temp: convertTemp(temp),
+        wind: wind_speed,
+        desc: main,
+        icon: `https://openweathermap.org/img/wn/${icon}@2x.png`,
+      });
+    });
+
+    let html = `
+      <h1 class="weather__title">${citySelect.selectedCity.name}</h1>
+      <div class="desc">${data[0].desc}</div>
+      <div class="temp">${data[0].temp}&deg;</div>
+      
+      <div class="weather__days">
+        ${createToday(data)}
+        ${createTomorrow(data)}
+      </div>
+	  `
+
+    setWeatherStatus(html);
+  }
+
+  function createToday(data) {
+    const {date: todayDate} = data[0];
+
+    let
+      todayHours = '',
+      maxTemp = -100,
+      minTemp = 100;
+
+    data.forEach(({temp, icon, date}) => {
+      if (todayDate.getDate() !== date.getDate()) {
+        return;
+      }
+
+      minTemp = (temp < minTemp) ? temp : minTemp;
+      maxTemp = (temp > maxTemp) ? temp : maxTemp;
+      todayHours += createHour(date.getHours(), icon, temp);
+    })
+
+    return `
+      <div class="day--today day">
+        <div class="day__top">
+          <div class="day__weekday">${weeks[calcWeekDay(todayDate) - 1]}<sub class="day__desc">Today</sub></div>
+          <div class="day__max-temp">${maxTemp}&deg;<sub>max</sub></div>
+          <div class="day__min-temp">${minTemp}&deg;<sub>min</sub></div>
+        </div>
+        <div class="day__bottom">
+          ${todayHours}
+        </div>
+      </div>
+    `
+  }
+
+  function createTomorrow(data) {
+    const {date: todayDate} = data[0];
+
+    let
+      tomorrowHours = '',
+      maxTemp = -100,
+      minTemp = 100,
+      tomorrowDate = '';
+
+    data.forEach(({temp, icon, date}) => {
+      if ((date.getDate() - todayDate.getDate()) !== 1) {
+        return;
+      }
+
+      tomorrowDate = date;
+      minTemp = (temp < minTemp) ? temp : minTemp;
+      maxTemp = (temp > maxTemp) ? temp : maxTemp;
+      tomorrowHours += createHour(date.getHours(), icon, temp);
+    })
+
+    return `
+      <div class="day--tomorrow day">
+        <div class="day__top">
+          <div class="day__weekday">${weeks[calcWeekDay(tomorrowDate) - 1]}<sub class="day__desc">Tomorrow</sub></div>
+          <div class="day__max-temp">${maxTemp}&deg;<sub>max</sub></div>
+          <div class="day__min-temp">${minTemp}&deg;<sub>min</sub></div>
+        </div>
+        <div class="day__bottom">
+          ${tomorrowHours}
+        </div>
+      </div>
+    `
+  }
+
+
+  function createHour(hour, icon, temp) {
+    return `
+    <div class="hour">
+      <div class="day__hour">${hour}</div>
+      <div class="day__icon">
+        <img src="${icon}" alt="icon">
+      </div>
+      <div class="day__temp">${temp}&deg;</div>
+    </div>
+    `
+  }
+
+  function calcWeekDay(date) {
+    return (date.getDay() === 0) ? 7 : date.getDay();
+  }
+
+  function resetWeatherStatus() {
+    if (getSavedCity().index !== '') {
+      document.querySelector('.weather__info').innerHTML = '';
+    } else {
+      document.querySelector('.weather__info').innerHTML = `
+      <h2 class="weather__greet">Welcome!</h2>
+      <h3 class="weather__text">
+        Select open menu by click the button on the top right side to select your city and get you weather forecast.
+      </h3>
+      <h3 class="weather__author">author: Kombarov Artyom</h3>
+      `
+    }
+  }
+
+  function setWeatherStatus(html) {
+    document.querySelector('.weather__info').innerHTML = html;
+    new Accordion('.weather__days', {
+      trigger: '.day__top',
+      content: '.day__bottom'
     })
   }
 
@@ -45,158 +196,14 @@ window.addEventListener('DOMContentLoaded', function () {
     return Math.floor(t - 273.15);
   }
 
-  function createWeatherByCity() {
-    console.log('da')
-    const info = citySelect.currentCityInfo;
-    if (!info) {
-      return;
-    }
-
-    let {current: {sunrise, sunset}, timezone_offset} = info;
-    const timezoneOffset = timezone_offset / 3600;
-    sunrise = new Dat(sunrise).getDate().toLocaleTimeString();
-    sunset = new Dat(sunset).getDate().toLocaleTimeString();
-    let data = [];
-    info.hourly.forEach(item => {
-      let {dt, temp, wind_speed, weather: [{main, icon}],} = item;
-      data.push({
-        date: new Dat(dt).getDate().toLocaleString(),
-        temp: convertTemp(temp),
-        wind: wind_speed,
-        desc: main,
-        icon: `https://openweathermap.org/img/wn/${icon}@2x.png`,
-      })
-    })
-  }
+  const weeks = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thurstday',
+    'Friday',
+    'Satturday',
+    'Sunday',
+  ]
 });
-
-
-// const countryIsReady = new CustomEvent('countryIsReady', { bubbles: true, cancelable: false });
-
-// renderCountries.then(() => {
-//   countrySelect.$list.addEventListener('click', selectCountry);
-//   countrySelect.$list.addEventListener('countryIsReady', () => {
-//     citySelect.$list.children[getSavedCityProps(savedCity).cityNum].click();
-//   });
-//
-//   countrySelect.$list.children[getSavedCityProps(savedCity).countryId].click();
-// });
-
-// wrapper.addEventListener('click', function (e) {
-//   if (e.target.closest('#city') && e.target.tagName === 'LI') {
-//     const cityId = e.target.dataset.id
-//     const cityNum = citySelect.data.findIndex(item => item.id == cityId)
-//
-//     selectCity(cityId, cityNum)
-//   }
-// })
-
-// function getSavedCityProps(saved) {
-//   if (Object.keys(saved).length <= 2) {
-//     return {
-//       cityId: 0,
-//       cityNum: 0,
-//       country: 0,
-//       countryId: 0,
-//     };
-//   } else {
-//     return saved;
-//   }
-// }
-
-// function selectCountry(e) {
-//   const country = e.target.dataset.id;
-//   const countryId = countrySelect.data.findIndex(item => item.id === country).toString();
-//
-//   if (countryId != savedCity.countryId) {
-//     savedCity.cityNum = '0';
-//     savedCity.cityId = '0';
-//   }
-//
-//   setStatus(statusImg, 'request');
-//   getRequest(`assets/json/city.${country.toLowerCase()}.list.json`)
-//     .then(list => {
-//       list = list.sort(sortByName);
-//       list = clearCityes(list);
-//       setTimeout(() => {
-//         if (citySelect) {
-//           citySelect.destroy()
-//         }
-//         document.querySelector('.weather__select').insertAdjacentHTML('beforeend', '<div id="city"></div>')
-//         citySelect = new Select('city', {
-//           list: '.select-list',
-//           input: '.select-input',
-//           search: true,
-//           // selectedIndex: getSavedCityProps(savedCity).cityNum,
-//           data: list
-//         })
-//         setStatus(statusImg, 'done');
-//         savedCity.country = country;
-//         savedCity.countryId = countryId;
-//         countrySelect.$list.dispatchEvent(countryIsReady);
-//       }, 500);
-//     })
-//     .catch(e => {
-//       return;
-//     })
-// }
-
-// function selectCity(cityId, cityNum) {
-//   savedCity.cityId = cityId.toString();
-//   savedCity.cityNum = cityNum.toString();
-//
-//   setStatus(statusImg, 'request');
-//   getRequest(`https://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apikey}`)
-//     .then(res => {
-//       if (!res) {
-//         return;
-//       }
-//       setTimeout(() => {
-//         setStatus(statusImg, 'done');
-//         weatherInfo.innerHTML = createWeatherInfo(res);
-//
-//         storage.setItem('savedCity', JSON.stringify(savedCity));
-//       }, 500);
-//     })
-// }
-
-// function setStatus(el, status) {
-//   switch (status) {
-//     case 'request': {
-//       if (citySelect) {
-//         citySelect.$el.classList.add('hidden--op');
-//         weatherInfo.classList.add('hidden--op');
-//       }
-//       el.setAttribute('src', 'assets//img/spin.gif');
-//       break;
-//     }
-//     case 'done': {
-//       if (citySelect) {
-//         citySelect.$el.classList.remove('hidden--op');
-//         weatherInfo.classList.remove('hidden--op');
-//       }
-//       el.setAttribute('src', '');
-//       break;
-//     }
-//     case 'error': {
-//       const errorMessage = document.createElement('div')
-//       errorMessage.classList.add('error');
-//       errorMessage.textContent = 'Something went wrong, try again later...';
-//       el.parentNode.insertAdjacentElement('beforebegin', errorMessage)
-//       el.setAttribute('src', 'assets/img/error.webp');
-//       break;
-//     }
-//   }
-// }
-
-// async function getRequest(url) {
-//
-//   const req = await fetch(url);
-//   if (!req.ok) {
-//     setStatus(statusImg, 'error');
-//     return;
-//   }
-//   return await req.json();
-// }
-
 

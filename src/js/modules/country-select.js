@@ -1,12 +1,10 @@
 import Select from "./select";
 import Request from "../services/request";
-import {saveCountry, getSavedCountry} from "./savedcity";
+import {saveCountry} from "./savedcity";
 
 export default class CountrySelect extends Select {
   constructor(idSelector, options) {
     super(idSelector, options);
-
-    this.$status = document.querySelector(options.status);
   }
 
   setup() {
@@ -43,6 +41,7 @@ export default class CountrySelect extends Select {
     const countryIndex = cntryIndex ? cntryIndex : this.data.findIndex(item => item.id === countryId).toString();
     this.selectedCountry = {id: countryId, index: countryIndex};
 
+    this.setStatus('request');
     new Request(`assets/json/city.${countryId.toLowerCase()}.list.json`, {
       sendingMessage: 'request',
       successMessage: 'done',
@@ -53,9 +52,12 @@ export default class CountrySelect extends Select {
       .then(unSortCityList => unSortCityList.sort(this.sortByName))
       .then(sortCityList => this.clearCities(sortCityList))
       .then(clearSortCityList => {
-        saveCountry({index: countryIndex});
-        this.cityListByCountry = clearSortCityList;
-        window.dispatchEvent(countryIsSelected);
+        setTimeout(() => {
+          saveCountry(countryIndex);
+          this.cityListByCountry = clearSortCityList;
+          this.setStatus('done');
+          window.dispatchEvent(countryIsSelected);
+        }, 500)
       })
   }
 
@@ -66,7 +68,8 @@ export default class CountrySelect extends Select {
         //   citySelect.$el.classList.add('hidden--op');
         //   weatherInfo.classList.add('hidden--op');
         // }
-        this.$statusImg.setAttribute('src', 'assets//img/spin.gif');
+        this.$status.classList.add('requesting');
+        document.querySelector('.weather__status').classList.add('active');
         break;
       }
       case 'done': {
@@ -74,19 +77,22 @@ export default class CountrySelect extends Select {
         //   citySelect.$el.classList.remove('hidden--op');
         //   weatherInfo.classList.remove('hidden--op');
         // }
-        this.$statusImg.setAttribute('src', '');
+        this.$status.classList.remove('requesting');
+        document.querySelector('.weather__status').classList.remove('active');
         break;
       }
       case 'error': {
         const errorMessage = document.createElement('div')
         errorMessage.classList.add('error');
         errorMessage.textContent = 'Something went wrong, try again later...';
-        this.$statusImg.parentNode.insertAdjacentElement('beforebegin', errorMessage)
-        this.$statusImg.setAttribute('src', 'assets/img/error.webp');
+        this.$status.parentNode.insertAdjacentElement('beforebegin', errorMessage)
+        this.$status.setAttribute('src', 'assets/img/error.webp');
         break;
       }
     }
   }
+
+  F
 
   sortByName(a, b) {
     if (a.name > b.name) {

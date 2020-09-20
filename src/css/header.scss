@@ -25,10 +25,11 @@
   background: linear-gradient(to bottom, #2a3549, #1a202a);
 
   position: absolute;
+  z-index: 42;
   right: -100%;
   top: 52px;
 
-  transition: all 0.3s;
+  transition: all 0.3s ease-out;
 }
 
 .header__selects.opened {

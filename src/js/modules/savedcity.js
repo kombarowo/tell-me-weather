@@ -2,9 +2,20 @@ function saveCity(obj) {
   localStorage.setItem('savedCity', JSON.stringify(obj));
 }
 
-function saveCountry(obj) {
-  localStorage.setItem('savedCountry', JSON.stringify(obj));
+function saveCountry(index) {
+  localStorage.setItem('savedCountry', JSON.stringify({index: index.toString()}));
 }
+
+function getSavedCountry() {
+  if (localStorage.getItem('savedCountry')) {
+    return JSON.parse(localStorage.getItem('savedCountry'));
+  } else {
+    return {
+      index: '',
+    }
+  }
+}
+
 
 function getSavedCity() {
   if (localStorage.getItem('savedCity')) {
@@ -13,19 +24,10 @@ function getSavedCity() {
     return {
       name: '',
       id: '',
-      index: ''
+      index: '',
+      countryIndex: ''
     }
   }
 }
 
-function getSavedCountry() {
-  if (localStorage.getItem('savedCountry')) {
-    return JSON.parse(localStorage.getItem('savedCountry'));
-  } else {
-    return {
-      index: ''
-    }
-  }
-}
-
-export {getSavedCity, getSavedCountry, saveCity, saveCountry};
+export {getSavedCity, saveCity, saveCountry, getSavedCountry};

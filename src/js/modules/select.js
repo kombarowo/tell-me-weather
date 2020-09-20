@@ -4,6 +4,7 @@ export default class Select {
     this.search = options.search;
     this.data = options.data;
     this.selectedIndex = (options.selectedIndex) ? options.selectedIndex : '';
+    this.$status = document.querySelector(options.status);
 
     this.render();
     this.$list = this.$el.querySelector(options.list);
