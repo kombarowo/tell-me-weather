@@ -1,0 +1,133 @@
+.weather {
+  color: #f5f8fd;
+  max-width: 600px;
+  margin: 0px auto;
+  overflow: hidden;
+
+  text-align: center;
+}
+
+.weather__greet{
+  opacity: 0;
+  animation-name: title;
+  animation-duration: 1s;
+  animation-delay: 1.25s;
+  animation-fill-mode: forwards;
+}
+
+.weather__text {
+  padding: 10px;
+  line-height: 2em;
+
+  opacity: 0;
+  animation-name: title;
+  animation-duration: 1s;
+  animation-delay: 1.5s;
+  animation-fill-mode: forwards;
+}
+
+.weather__author {
+  margin-top: auto;
+
+  opacity: 0;
+  animation-name: title;
+  animation-duration: 1s;
+  animation-delay: 1.75s;
+  animation-fill-mode: forwards;
+}
+
+.weather__title {
+  font-size: 30px;
+  animation-name: title;
+  animation-duration: 0.5s;
+  animation-delay: 0.2s;
+  animation-fill-mode: forwards;
+  margin: 10px;
+  margin-top: 25px;
+  opacity: 0;
+  font-weight: 600;
+  line-height: 1em;
+}
+
+.desc {
+  font-size: 25px;
+  animation-name: title;
+  animation-duration: 0.5s;
+  animation-delay: 0.4s;
+  animation-fill-mode: forwards;
+  opacity: 0;
+  font-weight: 400;
+}
+
+.temp {
+  font-size: 65px;
+  animation-name: title;
+  animation-duration: 0.5s;
+  animation-delay: 0.6s;
+  animation-fill-mode: forwards;
+  opacity: 0;
+  font-weight: 400;
+  margin: 15px;
+}
+
+.weather__select {
+  display: flex;
+  justify-content: space-around;
+}
+
+.weather__image {
+  display: flex;
+  justify-content: center;
+}
+
+.weather__image img {
+  display: block;
+}
+
+.weather__row {
+  width: 75%;
+  margin: 0px auto;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.weather__status {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.weather__days {
+  padding: 0 20px;
+}
+
+@keyframes title {
+  0% {
+    opacity: 0;
+    transform: translate(0, 20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0px);
+  }
+}
+
+@media (max-width: 767px) {
+  .weather__status.active {
+    display: flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .weather__status {
+    display: none;
+  }
+  .weather{
+    padding-top: 100px;
+  }
+}

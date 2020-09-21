@@ -1,0 +1,156 @@
+#country,
+#city {
+  position: relative;
+
+  font-size: 20px;
+  width: 200px;
+}
+
+#country {
+  cursor: pointer;
+}
+
+#country .select-input {
+  z-index: 5;
+}
+
+#country .select-list {
+  z-index: 4;
+}
+
+#city .select-input {
+  z-index: 3;
+}
+
+.select-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: absolute;
+
+  box-sizing: border-box;
+  border: 1px solid #49495d;
+  border-top: none;
+  visibility: hidden;
+  opacity: 0;
+  max-height: 200px;
+  transition: all 0.5s;
+  transform: translate(0, -20px);
+}
+
+.select-list::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 5px;
+  background: #232442;
+}
+
+.select-list::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background-color: #ffffff;
+}
+
+.select-list.opened {
+  visibility: visible;
+  transform: translate(0, 0px);
+  opacity: 1;
+}
+
+.select-input {
+  width: 100%;
+  position: relative;
+  border: 1px solid #49495d;
+}
+
+.select-input:focus {
+  outline: none;
+}
+
+.select-item,
+.select-input {
+  box-sizing: border-box;
+  padding: 8px 10px;
+  text-align: left;
+  background: #2a3549;
+  border-bottom: 1px solid #49495d;
+
+  font-size: 16px;
+  color: #f5f8fd;
+  font-family: 'Kufam', cursive;
+}
+
+.select-item {
+  cursor: pointer;
+}
+
+.select-item:last-of-type {
+  border: none;
+}
+
+.hidden {
+  display: none;
+}
+
+.selected {
+  background: #95acca;
+}
+
+::placeholder {
+  color: rgba(245, 248, 253, 0.5);
+  opacity: 1;
+}
+
+.placeholder {
+  color: rgba(245, 248, 253, 0.5);
+  opacity: 1;
+}
+
+.status {
+  width: 40px;
+  height: 40px;
+  margin: 20px auto;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.requesting {
+  visibility: visible;
+  opacity: 1;
+}
+
+.error {
+  text-align: center;
+  color: tomato;
+  font-size: 20px;
+  padding-top: 25px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.input--error {
+  border: 1px solid tomato;
+}
+
+@media (max-width: 699px) {
+  .input--error {
+    position: relative;
+  }
+  .input--error::after {
+    content: 'error...';
+    position: absolute;
+    color: tomato;
+    left: 50%;
+    bottom: -30px;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (min-width: 700px) {
+  #country,
+  #city {
+    width: 175px;
+  }
+}

@@ -1,0 +1,9 @@
+.hour{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+
+  width: 80px;
+}

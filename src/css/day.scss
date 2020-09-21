@@ -1,0 +1,72 @@
+.day {
+  opacity: 0;
+  animation-name: fadeInUp;
+  animation-duration: 0.5s;
+  animation-delay: 0.8s;
+  animation-fill-mode: forwards;
+
+  &--today {
+    margin-bottom: 20px;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    font-size: 18px;
+    padding: 10px;
+    background: #1a202a;
+    border-radius: 5px;
+  }
+
+  & sub, & sup {
+    font-size: 10px;
+  }
+
+  &__desc {
+    margin-right: auto;
+    margin-left: 5px;
+    font-size: 12px;
+  }
+
+  &__icon img {
+    width: 60px;
+  }
+
+  &__max-temp {
+    margin-right: 15px;
+    margin-left: auto;
+  }
+
+  &__bottom{
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  &__bottom-wrapper {
+    display: flex;
+    box-sizing: border-box;
+    font-size: 18px;
+
+    opacity: 0;
+    transition: all 0.5s;
+  }
+
+  &__bottom-wrapper.opened {
+    padding: 20px 0;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translate(0, 20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0px);
+  }
+}

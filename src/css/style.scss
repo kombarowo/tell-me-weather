@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600&display=swap');
+@import "loader";
+@import "header";
+@import "weather";
+@import "menu";
+@import "selects";
+@import "day";
+@import "hour";
+
+body {
+  margin: 0;
+  padding: 0;
+  background-image: linear-gradient(to bottom, #2a3549, #1a202a);
+  font-family: 'Kufam', cursive;
+  font-weight: 400;
+  color: #f5f8fd;
+}
+
+.content {
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 850px;
+  padding: 0 25px;
+  margin: 0 auto;
+}
+
+
