@@ -207,7 +207,7 @@ window.addEventListener('DOMContentLoaded', function () {
       document.querySelector('.weather__info').innerHTML = `
       <h2 class="weather__greet">Welcome!</h2>
       <h3 class="weather__text">
-        Select open menu by click the button on the top right side to select your city and get you weather forecast.
+        Open menu by click the button on the top right side to select your city and get you weather forecast.
       </h3>
       <h3 class="weather__author">author: Kombarov Artyom</h3>
       `
