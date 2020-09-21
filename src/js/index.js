@@ -1,5 +1,6 @@
 import 'custom-event-polyfill';
 import 'element-closest-polyfill';
+import './polyfils/foreach';
 import 'whatwg-fetch';
 import '../css/style.scss';
 import 'swiper/swiper-bundle.css';
