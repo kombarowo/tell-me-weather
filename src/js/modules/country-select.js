@@ -46,7 +46,6 @@ export default class CountrySelect extends Select {
       sendingMessage: 'request',
       successMessage: 'done',
       errorMessage: 'error',
-      setStatus: this.setStatus
     })
       .getData()
       .then(unSortCityList => unSortCityList.sort(this.sortByName))
@@ -58,6 +57,9 @@ export default class CountrySelect extends Select {
           this.setStatus('done');
           window.dispatchEvent(countryIsSelected);
         }, 500)
+      })
+      .catch(e => {
+        this.setStatus('error');
       })
   }
 

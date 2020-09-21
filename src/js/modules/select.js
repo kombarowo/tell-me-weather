@@ -99,11 +99,12 @@ export default class Select {
         break;
       }
       case 'error': {
-        const errorMessage = document.createElement('div')
-        errorMessage.classList.add('error');
-        errorMessage.textContent = 'Something went wrong, try again later...';
-        this.$status.parentNode.insertAdjacentElement('beforebegin', errorMessage)
-        this.$status.setAttribute('src', 'assets/img/error.webp');
+        document.querySelector('.error-wrapper').innerHTML = `
+        <div class="error">Something went wrong, try again later...</div>
+        `;
+        document.querySelector('.weather__status').classList.remove('active');
+        this.$status.classList.remove('requesting');
+        this.$input.classList.add('input--error');
         break;
       }
     }

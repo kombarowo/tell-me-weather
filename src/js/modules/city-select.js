@@ -49,7 +49,6 @@ export default class CitySelect extends Select {
       sendingMessage: 'request',
       successMessage: 'done',
       errorMessage: 'error',
-      setStatus: this.setStatus
     })
       .getData()
       .then(cityInfo => {

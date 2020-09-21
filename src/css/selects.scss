@@ -88,6 +88,7 @@ select {
 
 .select-item,
 .select-input {
+  box-sizing: border-box;
   padding: 8px 10px;
   text-align: left;
   background: #2a3549;
@@ -138,10 +139,29 @@ select {
   opacity: 1;
 }
 
+.input--error {
+  border: 1px solid tomato;
+}
+
 .error {
-  color: red;
+  text-align: center;
+  color: tomato;
   font-size: 20px;
   padding-top: 25px;
   padding-left: 20px;
   padding-right: 20px;
+}
+
+@media (max-width: 700px) {
+  .input--error {
+    position: relative;
+  }
+  .input--error::after {
+    content: 'error...';
+    position: absolute;
+    color: tomato;
+    left: 50%;
+    bottom: -30px;
+    transform: translate(-50%, 0);
+  }
 }
