@@ -5,6 +5,7 @@ export default class Select {
     this.data = options.data;
     this.selectedIndex = (options.selectedIndex) ? options.selectedIndex : '';
     this.$status = document.querySelector(options.status);
+    this.placeholder = options.placeholder ? options.placeholder : 'Choose...';
 
     this.render();
     this.$list = this.$el.querySelector(options.list);
@@ -156,12 +157,12 @@ export default class Select {
 
     if (search) {
       return `
-          <input class="select-input" placeholder="Choose..." type="text" data-type="input">
+          <input class="select-input" placeholder="${this.placeholder}" type="text" data-type="input">
           <ul class="select-list">${list.join('')}</ul>
       `
     } else {
       return `
-          <div class="select-input placeholder" data-type="input">Choose...</div>
+          <div class="select-input placeholder" data-type="input">${this.placeholder}</div>
           <ul class="select-list">${list.join('')}</ul>
       `
     }

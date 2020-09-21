@@ -26,6 +26,7 @@ window.addEventListener('DOMContentLoaded', function () {
     list: '.select-list',
     input: '.select-input',
     status: '.status',
+    placeholder: 'Country...',
     data: [
       {id: 'ru', name: 'Russia'},
       {id: 'ua', name: 'Ukraine'},
@@ -53,6 +54,7 @@ window.addEventListener('DOMContentLoaded', function () {
       list: '.select-list',
       input: '.select-input',
       status: '.status',
+      placeholder: 'City...',
       search: true,
       data: countrySelect.cityListByCountry,
       selectedIndex: cityIndex,
