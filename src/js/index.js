@@ -22,8 +22,6 @@ window.addEventListener('DOMContentLoaded', function () {
     activeClass: 'opened'
   });
 
-  console.log('da');
-
   const countrySelect = new CountrySelect('country', {
     list: '.select-list',
     input: '.select-input',
@@ -91,14 +89,14 @@ window.addEventListener('DOMContentLoaded', function () {
 
     setWeatherStatus(html);
 
-    const todaySlider = new Swiper('.day--today .day__bottom', {
+    new Swiper('.day--today .day__bottom', {
       wrapperClass: 'day__bottom-wrapper',
       slideClass: 'hour',
       slidesPerView: 5,
       slidesPerGroup: 1
     });
 
-    const tomorrowSlider = new Swiper('.day--tomorrow .day__bottom', {
+    new Swiper('.day--tomorrow .day__bottom', {
       wrapperClass: 'day__bottom-wrapper',
       slideClass: 'hour',
       slidesPerView: 5,
