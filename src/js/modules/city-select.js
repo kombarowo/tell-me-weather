@@ -66,33 +66,4 @@ export default class CitySelect extends Select {
         }, 500)
       })
   }
-
-  setStatus(status) {
-    switch (status) {
-      case 'request': {
-        // if (citySelect) {
-        //   citySelect.$el.classList.add('hidden--op');
-        //   weatherInfo.classList.add('hidden--op');
-        // }
-        this.$status.classList.add('requesting');
-        break;
-      }
-      case 'done': {
-        // if (citySelect) {
-        //   citySelect.$el.classList.remove('hidden--op');
-        //   weatherInfo.classList.remove('hidden--op');
-        // }
-        this.$status.classList.remove('requesting');
-        break;
-      }
-      case 'error': {
-        const errorMessage = document.createElement('div')
-        errorMessage.classList.add('error');
-        errorMessage.textContent = 'Something went wrong, try again later...';
-        this.$status.parentNode.insertAdjacentElement('beforebegin', errorMessage)
-        this.$status.setAttribute('src', 'assets/img/error.webp');
-        break;
-      }
-    }
-  }
 }

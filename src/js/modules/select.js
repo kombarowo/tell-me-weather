@@ -85,6 +85,29 @@ export default class Select {
     this.close();
   }
 
+  setStatus(status) {
+    switch (status) {
+      case 'request': {
+        this.$status.classList.add('requesting');
+        document.querySelector('.weather__status').classList.add('active');
+        break;
+      }
+      case 'done': {
+        this.$status.classList.remove('requesting');
+        document.querySelector('.weather__status').classList.remove('active');
+        break;
+      }
+      case 'error': {
+        const errorMessage = document.createElement('div')
+        errorMessage.classList.add('error');
+        errorMessage.textContent = 'Something went wrong, try again later...';
+        this.$status.parentNode.insertAdjacentElement('beforebegin', errorMessage)
+        this.$status.setAttribute('src', 'assets/img/error.webp');
+        break;
+      }
+    }
+  }
+
   setScroll() {
     setTimeout(() => {
       this.$list.scrollTop = this.$selectedElement.offsetTop - this.$list.offsetHeight / 2 + this.$selectedElement.offsetHeight

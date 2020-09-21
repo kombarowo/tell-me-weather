@@ -61,39 +61,6 @@ export default class CountrySelect extends Select {
       })
   }
 
-  setStatus(status) {
-    switch (status) {
-      case 'request': {
-        // if (citySelect) {
-        //   citySelect.$el.classList.add('hidden--op');
-        //   weatherInfo.classList.add('hidden--op');
-        // }
-        this.$status.classList.add('requesting');
-        document.querySelector('.weather__status').classList.add('active');
-        break;
-      }
-      case 'done': {
-        // if (citySelect) {
-        //   citySelect.$el.classList.remove('hidden--op');
-        //   weatherInfo.classList.remove('hidden--op');
-        // }
-        this.$status.classList.remove('requesting');
-        document.querySelector('.weather__status').classList.remove('active');
-        break;
-      }
-      case 'error': {
-        const errorMessage = document.createElement('div')
-        errorMessage.classList.add('error');
-        errorMessage.textContent = 'Something went wrong, try again later...';
-        this.$status.parentNode.insertAdjacentElement('beforebegin', errorMessage)
-        this.$status.setAttribute('src', 'assets/img/error.webp');
-        break;
-      }
-    }
-  }
-
-  F
-
   sortByName(a, b) {
     if (a.name > b.name) {
       return 1;
