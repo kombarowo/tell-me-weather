@@ -11,9 +11,10 @@ export default class Accordion {
     this.$wrappers.forEach(item => {
       item.addEventListener('click', (e) => {
         const trigger = e.target.closest(this.trigger) ? e.target.closest(this.trigger) : '';
-        const content = trigger.nextElementSibling;
+        const wrapper = trigger.nextElementSibling ? trigger.nextElementSibling : '';
 
         if (trigger) {
+          const content = wrapper.querySelector(this.content);
           this.toggle(content);
         }
       })
@@ -23,7 +24,7 @@ export default class Accordion {
   toggle(content) {
     if (content.classList.contains('opened')) {
       content.classList.remove('opened');
-      content.style.maxHeight = '0px';
+      content.style.maxHeight = '0';
     } else {
       content.classList.add('opened');
       content.style.maxHeight = (content.scrollHeight + 50) + 'px';

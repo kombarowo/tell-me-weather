@@ -1,5 +1,11 @@
 .day {
-  &--today{
+  opacity: 0;
+  animation-name: fadeInUp;
+  animation-duration: 0.5s;
+  animation-delay: 0.8s;
+  animation-fill-mode: forwards;
+
+  &--today {
     margin-bottom: 20px;
   }
 
@@ -34,34 +40,27 @@
   }
 
   &__bottom{
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  &__bottom-wrapper {
+    display: flex;
     box-sizing: border-box;
     font-size: 18px;
 
     opacity: 0;
-    max-height: 0px;
     transition: all 0.5s;
-    border-bottom: 1px solid rgba(255,255,255,0.5);
-    border-top: 1px solid rgba(255,255,255,0.5);
-    overflow: hidden;
-
-    &-wrapper{
-      display: flex;
-    }
   }
 
-  &__bottom.opened {
+  &__bottom-wrapper.opened {
     padding: 20px 0;
     opacity: 1;
   }
-
-  opacity: 0;
-  animation-name: title;
-  animation-duration: 0.5s;
-  animation-delay: 0.8s;
-  animation-fill-mode: forwards;
 }
 
-@keyframes title {
+@keyframes fadeInUp {
   0% {
     opacity: 0;
     transform: translate(0, 20px);

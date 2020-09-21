@@ -160,7 +160,7 @@ window.addEventListener('DOMContentLoaded', function () {
           <div class="day__min-temp">${minTemp}&deg;<sub>min</sub></div>
         </div>
         <div class="day__bottom">
-          <div class="day__bottom-wrapper">
+          <div class="day__bottom-wrapper" style="max-height: 0;">
             ${todayHours}
           </div>
         </div>
@@ -196,7 +196,7 @@ window.addEventListener('DOMContentLoaded', function () {
           <div class="day__min-temp">${minTemp}&deg;<sub>min</sub></div>
         </div>
         <div class="day__bottom">
-          <div class="day__bottom-wrapper">
+          <div class="day__bottom-wrapper" style="max-height: 0;">
             ${tomorrowHours}
           </div>
         </div>
@@ -242,7 +242,7 @@ window.addEventListener('DOMContentLoaded', function () {
     document.querySelector('.weather__info').innerHTML = html;
     new Accordion('.weather__days', {
       trigger: '.day__top',
-      content: '.day__bottom'
+      content: '.day__bottom-wrapper'
     })
   }
 
