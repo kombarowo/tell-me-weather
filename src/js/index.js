@@ -95,14 +95,38 @@ window.addEventListener('DOMContentLoaded', function () {
       wrapperClass: 'day__bottom-wrapper',
       slideClass: 'hour',
       slidesPerView: 5,
-      slidesPerGroup: 1
+      slidesPerGroup: 1,
+      breakpoints: {
+        500: {
+          slidesPerView: 6
+        },
+        600: {
+          slidesPerView: 7
+        },
+        700: {
+          slidesPerView: 8
+        },
+      },
+      grabCursor: true
     });
 
     new Swiper('.day--tomorrow .day__bottom', {
       wrapperClass: 'day__bottom-wrapper',
       slideClass: 'hour',
       slidesPerView: 5,
-      slidesPerGroup: 1
+      slidesPerGroup: 1,
+      breakpoints: {
+        500: {
+          slidesPerView: 6
+        },
+        600: {
+          slidesPerView: 7
+        },
+        700: {
+          slidesPerView: 8
+        },
+      },
+      grabCursor: true
     });
 
     setTimeout(() => {
