@@ -5,9 +5,12 @@
   &__title {
     font-weight: 700;
     opacity: 0;
+  }
+
+  &__title.animated {
     animation-name: fadeInLeft;
     animation-duration: 0.5s;
-    animation-delay: 0.5s;
+    animation-delay: 0.25s;
     animation-fill-mode: forwards;
   }
 
@@ -37,7 +40,8 @@
     z-index: 42;
     right: -100%;
     top: 52px;
-    transition: all 0.3s ease-out;
+    transition: right 0.3s ease-out;
+    will-change: right;
   }
 
   &__selects.opened {
