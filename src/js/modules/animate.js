@@ -3,5 +3,4 @@ export default function setAnimateItems() {
   items.forEach(item => {
     item.classList.add('animated');
   })
-  console.log(items);
 }
