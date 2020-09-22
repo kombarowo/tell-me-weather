@@ -5,11 +5,13 @@
   height: 20px;
   background: none;
   border: none;
-
   opacity: 0;
+}
+
+.menu__button.animated {
   animation-name: fadeIn;
   animation-duration: 0.5s;
-  animation-delay: 1.5s;
+  animation-delay: 0.5s;
   animation-fill-mode: forwards;
 }
 

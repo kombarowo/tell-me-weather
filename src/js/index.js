@@ -10,6 +10,7 @@ import Dat from "./services/data-methods";
 import Menu from "./modules/menu";
 import Accordion from "./modules/accordion";
 import Swiper from 'swiper';
+import setAnimateItems from "./modules/animate";
 import {getSavedCity, getSavedCountry} from "./modules/savedcity";
 
 window.addEventListener('DOMContentLoaded', function () {
@@ -114,7 +115,7 @@ window.addEventListener('DOMContentLoaded', function () {
       wrapperClass: 'day__bottom-wrapper',
       slideClass: 'hour',
       slidesPerView: 5,
-      slidesPerGroup: 1,
+      slidesPerGroup: 3,
       breakpoints: {
         500: {
           slidesPerView: 6
@@ -228,6 +229,7 @@ window.addEventListener('DOMContentLoaded', function () {
     if (getSavedCity().index !== '') {
       document.querySelector('.weather__info').innerHTML = '';
     } else {
+      setAnimateItems();
       document.querySelector('.weather__info').innerHTML = `
       <h2 class="weather__greet">Welcome!</h2>
       <h3 class="weather__text">
@@ -243,7 +245,8 @@ window.addEventListener('DOMContentLoaded', function () {
     new Accordion('.weather__days', {
       trigger: '.day__top',
       content: '.day__bottom-wrapper'
-    })
+    });
+    setAnimateItems();
   }
 
   function convertTemp(t) {

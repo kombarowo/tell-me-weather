@@ -5,9 +5,12 @@
   &__title {
     font-weight: 700;
     opacity: 0;
+  }
+
+  &__title.animated {
     animation-name: fadeInLeft;
     animation-duration: 0.5s;
-    animation-delay: 2s;
+    animation-delay: 0.25s;
     animation-fill-mode: forwards;
   }
 
