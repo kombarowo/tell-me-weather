@@ -17,6 +17,10 @@ window.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('countryIsSelected', createCityList);
   window.addEventListener('cityIsSelected', createWeatherByCity);
 
+  if(getSavedCity().index === ''){
+    resetWeatherStatus();
+  }
+
   const menu = new Menu('.header__selects', {
     trigger: '.menu__button',
     triggerActiveClass: 'menu__button--open',
@@ -38,7 +42,6 @@ window.addEventListener('DOMContentLoaded', function () {
   });
 
   let citySelect;
-  resetWeatherStatus();
 
   function createCityList() {
     const savedCountryIndex = getSavedCity().countryIndex;
@@ -227,6 +230,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
   function resetWeatherStatus() {
     if (citySelect && citySelect.selectedIndex !== '') {
+      console.log('da');
       document.querySelector('.weather__info').innerHTML = '';
     } else {
       setAnimateItems();
