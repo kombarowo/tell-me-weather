@@ -39,24 +39,23 @@
     margin-left: auto;
   }
 
-  &__bottom{
+  &__bottom {
+    opacity: 0;
+    transition: opacity 0.5s, max-height 0.5s, padding 0.5s;
     overflow: hidden;
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     border-top: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  &__bottom.opened {
+    padding: 20px 0;
+    opacity: 1;
   }
 
   &__bottom-wrapper {
     display: flex;
     box-sizing: border-box;
     font-size: 18px;
-
-    opacity: 0;
-    transition: all 0.5s;
-  }
-
-  &__bottom-wrapper.opened {
-    padding: 20px 0;
-    opacity: 1;
   }
 }
 

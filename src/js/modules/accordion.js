@@ -14,8 +14,7 @@ export default class Accordion {
         const wrapper = trigger.nextElementSibling ? trigger.nextElementSibling : '';
 
         if (trigger) {
-          const content = wrapper.querySelector(this.content);
-          this.toggle(content);
+          this.toggle(wrapper);
         }
       })
     })

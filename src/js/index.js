@@ -95,7 +95,7 @@ window.addEventListener('DOMContentLoaded', function () {
       wrapperClass: 'day__bottom-wrapper',
       slideClass: 'hour',
       slidesPerView: 5,
-      slidesPerGroup: 1,
+      slidesPerGroup: 3,
       breakpoints: {
         500: {
           slidesPerView: 6
@@ -159,8 +159,8 @@ window.addEventListener('DOMContentLoaded', function () {
           <div class="day__max-temp">${maxTemp}&deg;<sub>max</sub></div>
           <div class="day__min-temp">${minTemp}&deg;<sub>min</sub></div>
         </div>
-        <div class="day__bottom">
-          <div class="day__bottom-wrapper" style="max-height: 0;">
+        <div class="day__bottom" style="max-height: 0;">
+          <div class="day__bottom-wrapper">
             ${todayHours}
           </div>
         </div>
@@ -195,8 +195,8 @@ window.addEventListener('DOMContentLoaded', function () {
           <div class="day__max-temp">${maxTemp}&deg;<sub>max</sub></div>
           <div class="day__min-temp">${minTemp}&deg;<sub>min</sub></div>
         </div>
-        <div class="day__bottom">
-          <div class="day__bottom-wrapper" style="max-height: 0;">
+        <div class="day__bottom" style="max-height: 0;">
+          <div class="day__bottom-wrapper">
             ${tomorrowHours}
           </div>
         </div>

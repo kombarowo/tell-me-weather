@@ -7,7 +7,7 @@
     opacity: 0;
     animation-name: fadeInLeft;
     animation-duration: 0.5s;
-    animation-delay: 0.5s;
+    animation-delay: 2s;
     animation-fill-mode: forwards;
   }
 
@@ -37,7 +37,8 @@
     z-index: 42;
     right: -100%;
     top: 52px;
-    transition: all 0.3s ease-out;
+    transition: right 0.3s ease-out;
+    will-change: right;
   }
 
   &__selects.opened {
