@@ -257,9 +257,9 @@ window.addEventListener('DOMContentLoaded', function () {
     'Monday',
     'Tuesday',
     'Wednesday',
-    'Thurstday',
+    'Thursday',
     'Friday',
-    'Satturday',
+    'Saturday',
     'Sunday',
   ]
 });
