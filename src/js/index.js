@@ -237,7 +237,7 @@ window.addEventListener('DOMContentLoaded', function () {
       document.querySelector('.weather__info').innerHTML = `
       <h2 class="weather__greet">Welcome!</h2>
       <h3 class="weather__text">
-        Open menu by click the button on the top right side to select your city and get you weather forecast.
+        Please select your country and city to get you weather forecast.
       </h3>
       <h3 class="weather__author">author: Kombarov Artyom</h3>
       `
@@ -261,9 +261,9 @@ window.addEventListener('DOMContentLoaded', function () {
     'Monday',
     'Tuesday',
     'Wednesday',
-    'Thurstday',
+    'Thursday',
     'Friday',
-    'Satturday',
+    'Saturday',
     'Sunday',
   ]
 });
